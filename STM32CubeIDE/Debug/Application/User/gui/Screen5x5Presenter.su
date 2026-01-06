@@ -1,0 +1,5 @@
+../../TouchGFX/gui/include/gui/screen5x5_screen/Screen5x5Presenter.hpp:28:13:Screen5x5Presenter::~Screen5x5Presenter()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_screen/Screen5x5Presenter.cpp:10:6:virtual void Screen5x5Presenter::activate()	0	static
+../../TouchGFX/gui/include/gui/screen5x5_screen/Screen5x5Presenter.hpp:28:13:virtual Screen5x5Presenter::~Screen5x5Presenter()	8	static
+../../TouchGFX/gui/include/gui/screen5x5_screen/Screen5x5Presenter.hpp:28:13:virtual void* Screen5x5Presenter::_ZThn4_N18Screen5x5PresenterD1Ev()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_screen/Screen5x5Presenter.cpp:4:1:Screen5x5Presenter::Screen5x5Presenter(Screen5x5View&)	0	static

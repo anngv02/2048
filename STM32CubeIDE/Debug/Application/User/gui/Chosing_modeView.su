@@ -1,0 +1,12 @@
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	0	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:154:18:virtual void touchgfx::Screen::handleKeyEvent(uint8_t)	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:20:6:virtual void Chosing_modeView::tearDownScreen()	0	static
+../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modeView.hpp:11:13:Chosing_modeView::~Chosing_modeView()	8	static
+../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modeView.hpp:11:13:virtual Chosing_modeView::~Chosing_modeView()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:7:1:Chosing_modeView::Chosing_modeView()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:45:6:void Chosing_modeView::selectMode()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:61:6:void Chosing_modeView::updateHighlight()	32	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:13:6:virtual void Chosing_modeView::setupScreen()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:25:6:void Chosing_modeView::moveUp()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:35:6:void Chosing_modeView::moveDown()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modeView.cpp:88:6:virtual void Chosing_modeView::handleTickEvent()	32	static

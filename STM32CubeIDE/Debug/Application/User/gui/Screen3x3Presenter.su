@@ -1,0 +1,5 @@
+../../TouchGFX/gui/include/gui/screen3x3_screen/Screen3x3Presenter.hpp:28:13:Screen3x3Presenter::~Screen3x3Presenter()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3Presenter.cpp:10:6:virtual void Screen3x3Presenter::activate()	0	static
+../../TouchGFX/gui/include/gui/screen3x3_screen/Screen3x3Presenter.hpp:28:13:virtual Screen3x3Presenter::~Screen3x3Presenter()	8	static
+../../TouchGFX/gui/include/gui/screen3x3_screen/Screen3x3Presenter.hpp:28:13:virtual void* Screen3x3Presenter::_ZThn4_N18Screen3x3PresenterD1Ev()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3Presenter.cpp:4:1:Screen3x3Presenter::Screen3x3Presenter(Screen3x3View&)	0	static

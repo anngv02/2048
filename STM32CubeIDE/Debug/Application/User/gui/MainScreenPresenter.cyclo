@@ -1,0 +1,6 @@
+../../TouchGFX/gui/include/gui/mainscreen_screen/MainScreenPresenter.hpp:28:13:MainScreenPresenter::~MainScreenPresenter()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenPresenter.cpp:10:6:virtual void MainScreenPresenter::activate()	1
+../../TouchGFX/gui/include/gui/mainscreen_screen/MainScreenPresenter.hpp:28:13:virtual MainScreenPresenter::~MainScreenPresenter()	1
+../../TouchGFX/gui/include/gui/mainscreen_screen/MainScreenPresenter.hpp:28:13:virtual void* MainScreenPresenter::_ZThn4_N19MainScreenPresenterD1Ev()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenPresenter.cpp:4:1:MainScreenPresenter::MainScreenPresenter(MainScreenView&)	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenPresenter.cpp:19:6:void MainScreenPresenter::gotoGameOverScreen()	1

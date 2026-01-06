@@ -1,0 +1,5 @@
+../../TouchGFX/gui/include/gui/selectedgamedesign_screen/SelectedGameDesignPresenter.hpp:28:13:SelectedGameDesignPresenter::~SelectedGameDesignPresenter()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignPresenter.cpp:10:6:virtual void SelectedGameDesignPresenter::activate()	0	static
+../../TouchGFX/gui/include/gui/selectedgamedesign_screen/SelectedGameDesignPresenter.hpp:28:13:virtual SelectedGameDesignPresenter::~SelectedGameDesignPresenter()	8	static
+../../TouchGFX/gui/include/gui/selectedgamedesign_screen/SelectedGameDesignPresenter.hpp:28:13:virtual void* SelectedGameDesignPresenter::_ZThn4_N27SelectedGameDesignPresenterD1Ev()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignPresenter.cpp:4:1:SelectedGameDesignPresenter::SelectedGameDesignPresenter(SelectedGameDesignView&)	0	static

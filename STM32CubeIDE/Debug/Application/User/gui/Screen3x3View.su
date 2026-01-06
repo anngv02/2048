@@ -1,0 +1,20 @@
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:57:6:virtual void Screen3x3View::tearDownScreen()	0	static
+../../TouchGFX/gui/include/gui/screen3x3_screen/Screen3x3View.hpp:11:13:Screen3x3View::~Screen3x3View()	8	static
+../../TouchGFX/gui/include/gui/screen3x3_screen/Screen3x3View.hpp:11:13:virtual Screen3x3View::~Screen3x3View()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:14:10:uint32_t Screen3x3View::myRand()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:19:1:Screen3x3View::Screen3x3View()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:101:6:void Screen3x3View::updateScoreText()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:109:6:void Screen3x3View::moveLeft()	72	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:149:6:void Screen3x3View::moveRight()	64	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:188:6:void Screen3x3View::moveUp()	64	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:227:6:void Screen3x3View::moveDown()	64	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:332:6:void Screen3x3View::navigateToGameOverScreen()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:336:6:bool Screen3x3View::isGameOver()	24	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:300:6:void Screen3x3View::spawnRandomTile()	104	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:382:6:virtual void Screen3x3View::handleTickEvent()	32	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:368:6:void Screen3x3View::saveGridState()	24	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:374:6:bool Screen3x3View::hasGridChanged()	32	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:61:6:virtual void Screen3x3View::handleGestureEvent(const touchgfx::GestureEvent&)	16	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:267:6:virtual void Screen3x3View::handleKeyEvent(uint8_t)	16	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen3x3_screen/Screen3x3View.cpp:34:6:virtual void Screen3x3View::setupScreen()	32	static

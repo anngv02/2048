@@ -1,0 +1,2 @@
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/images/src/BitmapDatabase.cpp:17:37:const touchgfx::Bitmap::BitmapData* BitmapDatabase::getInstance()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/images/src/BitmapDatabase.cpp:22:10:uint16_t BitmapDatabase::getInstanceSize()	1

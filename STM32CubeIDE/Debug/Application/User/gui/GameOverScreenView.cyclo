@@ -1,0 +1,8 @@
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	1
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:154:18:virtual void touchgfx::Screen::handleKeyEvent(uint8_t)	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenView.cpp:19:6:virtual void GameOverScreenView::tearDownScreen()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenView.cpp:23:6:virtual void GameOverScreenView::handleTickEvent()	4
+../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenView.hpp:11:13:GameOverScreenView::~GameOverScreenView()	1
+../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenView.hpp:11:13:virtual GameOverScreenView::~GameOverScreenView()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenView.cpp:4:1:GameOverScreenView::GameOverScreenView()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenView.cpp:9:6:virtual void GameOverScreenView::setupScreen()	1

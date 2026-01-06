@@ -1,0 +1,21 @@
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:78:6:virtual void Screen5x5_superMergingView::tearDownScreen()	1
+../../TouchGFX/gui/include/gui/screen5x5_supermerging_screen/Screen5x5_superMergingView.hpp:12:13:Screen5x5_superMergingView::~Screen5x5_superMergingView()	1
+../../TouchGFX/gui/include/gui/screen5x5_supermerging_screen/Screen5x5_superMergingView.hpp:12:13:virtual Screen5x5_superMergingView::~Screen5x5_superMergingView()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:15:10:uint32_t Screen5x5_superMergingView::myRand()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:20:1:Screen5x5_superMergingView::Screen5x5_superMergingView()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:121:6:void Screen5x5_superMergingView::updateScoreText()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:260:6:void Screen5x5_superMergingView::navigateToGameOverScreen()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:264:6:bool Screen5x5_superMergingView::isGameOver()	10
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:206:6:void Screen5x5_superMergingView::spawnRandomTile()	6
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:296:6:void Screen5x5_superMergingView::saveGridState()	3
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:302:6:bool Screen5x5_superMergingView::hasGridChanged()	4
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:310:6:void Screen5x5_superMergingView::mergeSuperTiles(Tile5x5_Super**, bool)	14
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:128:6:void Screen5x5_superMergingView::moveLeftSuperMerging()	3
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:139:6:void Screen5x5_superMergingView::moveRightSuperMerging()	2
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:150:6:void Screen5x5_superMergingView::moveUpSuperMerging()	2
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:161:6:void Screen5x5_superMergingView::moveDownSuperMerging()	2
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:82:6:virtual void Screen5x5_superMergingView::handleGestureEvent(const touchgfx::GestureEvent&)	7
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:172:6:virtual void Screen5x5_superMergingView::handleKeyEvent(uint8_t)	7
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:377:6:virtual void Screen5x5_superMergingView::handleTickEvent()	14
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingView.cpp:54:6:virtual void Screen5x5_superMergingView::setupScreen()	3

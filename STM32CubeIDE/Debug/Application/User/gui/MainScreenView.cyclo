@@ -1,0 +1,21 @@
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	1
+../../TouchGFX/generated/gui_generated/include/gui_generated/mainscreen_screen/MainScreenViewBase.hpp:28:18:virtual void MainScreenViewBase::resetGame()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:66:6:virtual void MainScreenView::tearDownScreen()	1
+../../TouchGFX/gui/include/gui/mainscreen_screen/MainScreenView.hpp:12:13:MainScreenView::~MainScreenView()	1
+../../TouchGFX/gui/include/gui/mainscreen_screen/MainScreenView.hpp:12:13:virtual MainScreenView::~MainScreenView()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:13:10:uint32_t MainScreenView::myRand()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:18:1:MainScreenView::MainScreenView()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:109:6:void MainScreenView::updateScoreText()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:117:6:void MainScreenView::moveLeft()	9
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:155:6:void MainScreenView::moveRight()	9
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:192:6:void MainScreenView::moveUp()	9
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:229:6:void MainScreenView::moveDown()	9
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:345:6:void MainScreenView::navigateToGameOverScreen()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:349:6:bool MainScreenView::isGameOver()	10
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:300:6:void MainScreenView::spawnRandomTile()	6
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:395:6:virtual void MainScreenView::handleTickEvent()	13
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:381:6:void MainScreenView::saveGridState()	3
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:387:6:bool MainScreenView::hasGridChanged()	4
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:70:6:virtual void MainScreenView::handleGestureEvent(const touchgfx::GestureEvent&)	7
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:267:6:virtual void MainScreenView::handleKeyEvent(uint8_t)	7
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp:42:6:virtual void MainScreenView::setupScreen()	3

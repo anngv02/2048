@@ -1,0 +1,5 @@
+../../TouchGFX/gui/include/gui/screen5x5_supermerging_screen/Screen5x5_superMergingPresenter.hpp:28:13:Screen5x5_superMergingPresenter::~Screen5x5_superMergingPresenter()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingPresenter.cpp:10:6:virtual void Screen5x5_superMergingPresenter::activate()	1
+../../TouchGFX/gui/include/gui/screen5x5_supermerging_screen/Screen5x5_superMergingPresenter.hpp:28:13:virtual Screen5x5_superMergingPresenter::~Screen5x5_superMergingPresenter()	1
+../../TouchGFX/gui/include/gui/screen5x5_supermerging_screen/Screen5x5_superMergingPresenter.hpp:28:13:virtual void* Screen5x5_superMergingPresenter::_ZThn4_N31Screen5x5_superMergingPresenterD1Ev()	1
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingPresenter.cpp:4:1:Screen5x5_superMergingPresenter::Screen5x5_superMergingPresenter(Screen5x5_superMergingView&)	1

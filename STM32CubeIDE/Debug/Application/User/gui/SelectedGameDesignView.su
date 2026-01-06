@@ -1,0 +1,13 @@
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	0	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:154:18:virtual void touchgfx::Screen::handleKeyEvent(uint8_t)	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:18:6:virtual void SelectedGameDesignView::tearDownScreen()	0	static
+../../TouchGFX/gui/include/gui/selectedgamedesign_screen/SelectedGameDesignView.hpp:11:13:SelectedGameDesignView::~SelectedGameDesignView()	8	static
+../../TouchGFX/gui/include/gui/selectedgamedesign_screen/SelectedGameDesignView.hpp:11:13:virtual SelectedGameDesignView::~SelectedGameDesignView()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:5:1:SelectedGameDesignView::SelectedGameDesignView()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:49:6:void SelectedGameDesignView::selectMode()	8	static
+../../Middlewares/ST/touchgfx/framework/include/touchgfx/containers/buttons/BoxWithBorderButtonStyle.hpp:94:10:void touchgfx::BoxWithBorderButtonStyle<T>::setBoxWithBorderColors(touchgfx::colortype, touchgfx::colortype, touchgfx::colortype, touchgfx::colortype) [with T = touchgfx::ClickButtonTrigger]	4	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:69:6:void SelectedGameDesignView::updateHighlight()	32	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:11:6:virtual void SelectedGameDesignView::setupScreen()	8	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:23:6:void SelectedGameDesignView::moveUp()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:36:6:void SelectedGameDesignView::moveDown()	0	static
+C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/selectedgamedesign_screen/SelectedGameDesignView.cpp:104:6:virtual void SelectedGameDesignView::handleTickEvent()	32	static
