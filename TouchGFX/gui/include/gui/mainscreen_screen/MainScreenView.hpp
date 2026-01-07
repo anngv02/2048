@@ -12,6 +12,7 @@ public:
     virtual ~MainScreenView() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
+    virtual void handleDragEvent(const DragEvent& evt);
     virtual void handleGestureEvent(const GestureEvent& evt);
     virtual void handleKeyEvent(uint8_t key);
     virtual void handleTickEvent();
@@ -32,6 +33,16 @@ protected:
     uint32_t bestScore = 0;
     uint32_t myRand();
     void updateScoreText();
+    
+    // Biến để xử lý drag và gesture
+    int16_t dragStartX;
+    int16_t dragStartY;
+    int16_t dragEndX;
+    int16_t dragEndY;
+    bool isDragging;
+    
+    // Ngưỡng tối thiểu để tính là 1 lần vuốt (pixel)
+    static const int16_t MIN_SWIPE_DISTANCE = 30;
 };
 
 #endif // MAINSCREENVIEW_HPP

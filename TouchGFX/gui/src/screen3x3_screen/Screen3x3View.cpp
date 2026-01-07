@@ -1,9 +1,10 @@
 #include <gui/screen3x3_screen/Screen3x3View.hpp>
 #include <touchgfx/Utils.hpp>
 #include <touchgfx/events/GestureEvent.hpp>
+#include <touchgfx/events/DragEvent.hpp>
 #include <touchgfx/Callback.hpp>
 #include <cstdio>  // hoặc stdio.h nếu bạn thích C-style
-#include <cstdlib>     // srand, rand
+#include <cstdlib>     // srand, rand - cho hàm abs()
 #include <ctime> 
 #include <gui/common/FrontendApplication.hpp>
 #include <gui/common/GameGlobal.hpp>
@@ -29,12 +30,19 @@ Screen3x3View::Screen3x3View()
     tiles[2][0] = &tile3x35;
     tiles[2][1] = &tile3x37;
     tiles[2][2] = &tile3x39;
+    
+    // Khởi tạo biến drag
+    dragStartX = 0;
+    dragStartY = 0;
+    dragEndX = 0;
+    dragEndY = 0;
+    isDragging = false;
 }
 
 void Screen3x3View::setupScreen()
 {   
     score = 0;
-    bestScore = GameGlobal::bestScore;
+    bestScore = GameGlobal::bestScore3x3;  // Dùng bestScore riêng cho màn 3x3
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
     updateScoreText();
@@ -58,40 +66,75 @@ void Screen3x3View::tearDownScreen()
 {
     Screen3x3ViewBase::tearDownScreen();
 }
+
+void Screen3x3View::handleDragEvent(const DragEvent& evt)
+{
+    if (evt.getType() == DragEvent::DRAGGED)
+    {
+        if (!isDragging)
+        {
+            // Lưu điểm bắt đầu
+            dragStartX = evt.getOldX();
+            dragStartY = evt.getOldY();
+            isDragging = true;
+        }
+        // Cập nhật điểm cuối liên tục
+        dragEndX = evt.getNewX();
+        dragEndY = evt.getNewY();
+    }
+    else if (evt.getType() == DragEvent::DRAGGED_OUT)
+    {
+        // Reset khi kéo ra khỏi vùng
+        isDragging = false;
+    }
+    
+    Screen3x3ViewBase::handleDragEvent(evt);
+}
+
 void Screen3x3View::handleGestureEvent(const GestureEvent& evt)
 {   
-    saveGridState();
-    if (evt.getType() == GestureEvent::SWIPE_HORIZONTAL)
-    {
-        if (evt.getVelocity() > 0)
-        {
-            // Vuốt sang phải
-             moveRight();
+    // Nếu chưa từng nhận Drag trước đó, bỏ qua
+    if (!isDragging) return;
 
-        }
-        else
-        {
-            // Vuốt sang trái
-            moveLeft();
-        }
+    saveGridState();
+    
+    // Tính delta từ điểm bắt đầu và điểm cuối
+    int16_t deltaX = dragEndX - dragStartX;
+    int16_t deltaY = dragEndY - dragStartY;
+    
+    // Tính độ dài vector
+    int16_t absX = abs(deltaX);
+    int16_t absY = abs(deltaY);
+
+    // 1. Kiểm tra độ dài tối thiểu (Lọc nhiễu rung tay)
+    if (absX < MIN_SWIPE_DISTANCE && absY < MIN_SWIPE_DISTANCE) {
+        isDragging = false;
+        return;
     }
-    else if (evt.getType() == GestureEvent::SWIPE_VERTICAL)
+
+    // 2. Thuật toán "Dominant Axis" (Trục chiếm ưu thế)
+    // Nếu di chuyển ngang nhiều hơn dọc -> Là vuốt Ngang
+    if (absX > absY) 
     {
-        if (evt.getVelocity() > 0)
-        {
-            // Vuốt xuống
-             moveDown();
-        }
-        else
-        {
-            // Vuốt lên
-            moveUp();
-        }
+        // Đây là vuốt NGANG
+        if (deltaX > 0) moveRight();
+        else            moveLeft();
     }
+    else 
+    {
+        // Đây là vuốt DỌC
+        // Lưu ý: Hệ tọa độ màn hình Y tăng dần xuống dưới
+        if (deltaY > 0) moveDown();
+        else            moveUp();
+    }
+
+    // 3. Reset trạng thái & Xử lý Game logic
+    isDragging = false;
+
     if(hasGridChanged()){
         spawnRandomTile();
     }
-     // Sau khi di chuyển + spawn → kiểm tra thua
+    
     if (isGameOver())
     {
         navigateToGameOverScreen();
@@ -101,7 +144,7 @@ void Screen3x3View::handleGestureEvent(const GestureEvent& evt)
 void Screen3x3View::updateScoreText()
 {   
     GameGlobal::yourScore = score;
-    GameGlobal::bestScore = bestScore;
+    GameGlobal::bestScore3x3 = bestScore;  // Lưu bestScore riêng cho màn 3x3
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
 }

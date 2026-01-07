@@ -1,8 +1,9 @@
 #include <gui/mainscreen_screen/MainScreenView.hpp>
 #include <touchgfx/Utils.hpp>
 #include <touchgfx/events/GestureEvent.hpp>
+#include <touchgfx/events/DragEvent.hpp>
 #include <cstdio>  
-#include <cstdlib>     // srand, rand
+#include <cstdlib>     // srand, rand - cho hàm abs()
 #include <ctime> 
 #include <gui/common/FrontendApplication.hpp>
 #include <gui/common/GameGlobal.hpp>
@@ -37,12 +38,22 @@ MainScreenView::MainScreenView()
     tiles[3][1] = &tile31;
     tiles[3][2] = &tile32;
     tiles[3][3] = &tile33;
+    
+    // Khởi tạo biến drag
+    dragStartX = 0;
+    dragStartY = 0;
+    dragEndX = 0;
+    dragEndY = 0;
+    isDragging = false;
 }
 
 void MainScreenView::setupScreen()
 {   
+    // Khởi tạo random seed từ timer để mỗi lần chơi có sequence khác nhau
+    seed = HAL_GetTick();
+    
     score = 0;
-    bestScore = GameGlobal::bestScore;
+    bestScore = GameGlobal::bestScore4x4;  // Dùng bestScore riêng cho màn 4x4
     const int tileOffsetY = 80;
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
@@ -67,41 +78,77 @@ void MainScreenView::tearDownScreen()
 {
     MainScreenViewBase::tearDownScreen();
 }
+
+void MainScreenView::handleDragEvent(const DragEvent& evt)
+{
+    if (evt.getType() == DragEvent::DRAGGED)
+    {
+        if (!isDragging)
+        {
+            // Lưu điểm bắt đầu
+            dragStartX = evt.getOldX();
+            dragStartY = evt.getOldY();
+            isDragging = true;
+        }
+        // Cập nhật điểm cuối liên tục
+        dragEndX = evt.getNewX();
+        dragEndY = evt.getNewY();
+    }
+    else if (evt.getType() == DragEvent::DRAGGED_OUT)
+    {
+        // Reset khi kéo ra khỏi vùng
+        isDragging = false;
+    }
+    
+    MainScreenViewBase::handleDragEvent(evt);
+}
+
 void MainScreenView::handleGestureEvent(const GestureEvent& evt)
 {
-    if (evt.getType() == GestureEvent::SWIPE_HORIZONTAL)
-    {
-        if (evt.getVelocity() > 0)
-        {
-            // Vuốt sang phải
-             moveRight();
+    // Nếu chưa từng nhận Drag trước đó, bỏ qua
+    if (!isDragging) return;
 
-        }
-        else
-        {
-            // Vuốt sang trái
-            moveLeft();
-        }
+    saveGridState();
+    
+    // Tính delta từ điểm bắt đầu và điểm cuối
+    int16_t deltaX = dragEndX - dragStartX;
+    int16_t deltaY = dragEndY - dragStartY;
+    
+    // Tính độ dài vector
+    int16_t absX = abs(deltaX);
+    int16_t absY = abs(deltaY);
+
+    // 1. Kiểm tra độ dài tối thiểu (Lọc nhiễu rung tay)
+    if (absX < MIN_SWIPE_DISTANCE && absY < MIN_SWIPE_DISTANCE) {
+        isDragging = false;
+        return;
     }
-    else if (evt.getType() == GestureEvent::SWIPE_VERTICAL)
+
+    // 2. Thuật toán "Dominant Axis" (Trục chiếm ưu thế)
+    // Nếu di chuyển ngang nhiều hơn dọc -> Là vuốt Ngang
+    if (absX > absY) 
     {
-        if (evt.getVelocity() > 0)
-        {
-            // Vuốt xuống
-             moveDown();
-        }
-        else
-        {
-            // Vuốt lên
-            moveUp();
-        }
+        // Đây là vuốt NGANG
+        if (deltaX > 0) moveRight();
+        else            moveLeft();
     }
+    else 
+    {
+        // Đây là vuốt DỌC
+        // Lưu ý: Hệ tọa độ màn hình Y tăng dần xuống dưới
+        // Sửa: Đảo ngược logic deltaY để khắc phục vấn đề vuốt xuống đi lên
+        if (deltaY > 0) moveUp();
+        else            moveDown();
+    }
+
+    // 3. Reset trạng thái & Xử lý Game logic
+    isDragging = false;
+
     if (hasGridChanged()) {
-        spawnRandomTile();  // chi spawn neu co thay doi
+        spawnRandomTile();
     }
-     // Sau khi di chuyển + spawn → kiểm tra thua
-    if (isGameOver())
-    {
+    
+    if (isGameOver()) {
         navigateToGameOverScreen();
     }
 }
@@ -109,159 +156,199 @@ void MainScreenView::handleGestureEvent(const GestureEvent& evt)
 void MainScreenView::updateScoreText()
 {   
     GameGlobal::yourScore = score;
-    GameGlobal::bestScore = bestScore;
+    GameGlobal::bestScore4x4 = bestScore;  // Lưu bestScore riêng cho màn 4x4
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
 }
-//di chuyen trai
+//di chuyen trai - Thuật toán mới: xử lý tuần tự
 void MainScreenView::moveLeft()
 {
     for (int row = 0; row < 4; ++row)
     {
-        int merged[4] = {0}; // theo dõi các tile đã merge
-
-        for (int col = 1; col < 4; ++col)
+        // Tạo mảng tạm thời để lưu kết quả
+        uint16_t newRow[4] = {0};
+        int writePos = 0;
+        int lastMergedPos = -1; // Vị trí tile cuối cùng đã merge
+        
+        // Duyệt từ trái sang phải (từ cột 0 đến 3)
+        for (int col = 0; col < 4; ++col)
         {
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentCol = col;
-            while (currentCol > 0 &&
-                   tiles[row][currentCol - 1]->getValue() == 0)
+            uint16_t value = tiles[row][col]->getValue();
+            if (value == 0) continue; // Bỏ qua ô trống
+            
+            // Nếu có thể merge với tile cuối cùng trong newRow
+            if (writePos > 0 && 
+                newRow[writePos - 1] == value && 
+                lastMergedPos != writePos - 1) // Chưa merge trong lượt này
             {
-                tiles[row][currentCol - 1]->setValue(tiles[row][currentCol]->getValue());
-                tiles[row][currentCol]->setValue(0);
-                currentCol--;
+                // Merge: gấp đôi giá trị
+                newRow[writePos - 1] = value * 2;
+                lastMergedPos = writePos - 1;
+                score += value * 2;
             }
-
-            // Nếu có thể gộp
-            if (currentCol > 0 &&
-                tiles[row][currentCol - 1]->getValue() == tiles[row][currentCol]->getValue() &&
-                !merged[currentCol - 1])
-            {   
-                uint16_t newValue = tiles[row][currentCol - 1]->getValue() * 2;
-                tiles[row][currentCol - 1]->setValue(
-                    newValue);
-                tiles[row][currentCol]->setValue(0);
-                merged[currentCol - 1] = 1;
-                // Cộng điểm
-                score += newValue;
-                if (score > bestScore)
-                bestScore = score;
-                updateScoreText();
+            else
+            {
+                // Không merge được, thêm vào vị trí mới
+                newRow[writePos++] = value;
             }
         }
+        
+        // Cập nhật lại tiles từ mảng tạm
+        for (int col = 0; col < 4; ++col)
+        {
+            tiles[row][col]->setValue(newRow[col]);
+        }
     }
+    
+    // Cập nhật điểm sau khi xử lý tất cả các hàng
+    if (score > bestScore)
+        bestScore = score;
+    updateScoreText();
 }
 void MainScreenView::moveRight()
 {
     for (int row = 0; row < 4; ++row)
     {
-        int merged[4] = {0};
-
-        for (int col = 2; col >= 0; --col)
+        // Tạo mảng tạm thời để lưu kết quả
+        uint16_t newRow[4] = {0};
+        int writePos = 0;
+        int lastMergedPos = -1;
+        
+        // Duyệt từ phải sang trái (từ cột 3 về 0)
+        for (int col = 3; col >= 0; --col)
         {
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentCol = col;
-            while (currentCol < 3 && tiles[row][currentCol + 1]->getValue() == 0)
+            uint16_t value = tiles[row][col]->getValue();
+            if (value == 0) continue;
+            
+            // Nếu có thể merge với tile cuối cùng trong newRow
+            if (writePos > 0 && 
+                newRow[writePos - 1] == value && 
+                lastMergedPos != writePos - 1)
             {
-                tiles[row][currentCol + 1]->setValue(tiles[row][currentCol]->getValue());
-                tiles[row][currentCol]->setValue(0);
-                currentCol++;
+                // Merge
+                newRow[writePos - 1] = value * 2;
+                lastMergedPos = writePos - 1;
+                score += value * 2;
             }
-
-            if (currentCol < 3 &&
-                tiles[row][currentCol + 1]->getValue() == tiles[row][currentCol]->getValue() &&
-                !merged[currentCol + 1])
-            {   
-                uint16_t newValue = tiles[row][currentCol + 1]->getValue() * 2;
-                tiles[row][currentCol + 1]->setValue(
-                    newValue);
-                tiles[row][currentCol]->setValue(0);
-                merged[currentCol + 1] = 1;
-
-                // Cộng điểm
-                score += newValue;
-                if (score > bestScore)
-                bestScore = score;
-                updateScoreText();
+            else
+            {
+                // Không merge được, thêm vào vị trí mới
+                newRow[writePos++] = value;
             }
         }
+        
+        // Đảo ngược mảng để đặt vào đúng vị trí (từ phải sang trái)
+        for (int i = 0; i < writePos / 2; ++i)
+        {
+            uint16_t temp = newRow[i];
+            newRow[i] = newRow[writePos - 1 - i];
+            newRow[writePos - 1 - i] = temp;
+        }
+        
+        // Cập nhật lại tiles từ mảng tạm
+        for (int col = 0; col < 4; ++col)
+        {
+            tiles[row][col]->setValue(newRow[col]);
+        }
     }
+    
+    if (score > bestScore)
+        bestScore = score;
+    updateScoreText();
 }
 void MainScreenView::moveUp()
 {
     for (int col = 0; col < 4; ++col)
     {
-        int merged[4] = {0};
-
-        for (int row = 1; row < 4; ++row)
+        // Tạo mảng tạm thời để lưu kết quả
+        uint16_t newCol[4] = {0};
+        int writePos = 0;
+        int lastMergedPos = -1;
+        
+        // Duyệt từ trên xuống dưới (từ hàng 0 đến 3)
+        for (int row = 0; row < 4; ++row)
         {
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentRow = row;
-            while (currentRow > 0 && tiles[currentRow - 1][col]->getValue() == 0)
+            uint16_t value = tiles[row][col]->getValue();
+            if (value == 0) continue;
+            
+            // Nếu có thể merge với tile cuối cùng trong newCol
+            if (writePos > 0 && 
+                newCol[writePos - 1] == value && 
+                lastMergedPos != writePos - 1)
             {
-                tiles[currentRow - 1][col]->setValue(tiles[currentRow][col]->getValue());
-                tiles[currentRow][col]->setValue(0);
-                currentRow--;
+                // Merge
+                newCol[writePos - 1] = value * 2;
+                lastMergedPos = writePos - 1;
+                score += value * 2;
             }
-
-            if (currentRow > 0 &&
-                tiles[currentRow - 1][col]->getValue() == tiles[currentRow][col]->getValue() &&
-                !merged[currentRow - 1])
-            {   
-                uint16_t newValue = tiles[currentRow - 1][col]->getValue() * 2;
-                tiles[currentRow - 1][col]->setValue(
-                    newValue);
-                tiles[currentRow][col]->setValue(0);
-                merged[currentRow - 1] = 1;
-
-                // Cộng điểm
-                score += newValue;
-                if (score > bestScore)
-                bestScore = score;
-                updateScoreText();
+            else
+            {
+                // Không merge được, thêm vào vị trí mới
+                newCol[writePos++] = value;
             }
         }
+        
+        // Cập nhật lại tiles từ mảng tạm
+        for (int row = 0; row < 4; ++row)
+        {
+            tiles[row][col]->setValue(newCol[row]);
+        }
     }
+    
+    if (score > bestScore)
+        bestScore = score;
+    updateScoreText();
 }
 void MainScreenView::moveDown()
 {
     for (int col = 0; col < 4; ++col)
     {
-        int merged[4] = {0};
-
-        for (int row = 2; row >= 0; --row)
+        // Tạo mảng tạm thời để lưu kết quả
+        uint16_t newCol[4] = {0};
+        int writePos = 0;
+        int lastMergedPos = -1;
+        
+        // Duyệt từ dưới lên trên (từ hàng 3 về 0)
+        for (int row = 3; row >= 0; --row)
         {
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentRow = row;
-            while (currentRow < 3 && tiles[currentRow + 1][col]->getValue() == 0)
+            uint16_t value = tiles[row][col]->getValue();
+            if (value == 0) continue;
+            
+            // Nếu có thể merge với tile cuối cùng trong newCol
+            if (writePos > 0 && 
+                newCol[writePos - 1] == value && 
+                lastMergedPos != writePos - 1)
             {
-                tiles[currentRow + 1][col]->setValue(tiles[currentRow][col]->getValue());
-                tiles[currentRow][col]->setValue(0);
-                currentRow++;
+                // Merge
+                newCol[writePos - 1] = value * 2;
+                lastMergedPos = writePos - 1;
+                score += value * 2;
             }
-
-            if (currentRow < 3 &&
-                tiles[currentRow + 1][col]->getValue() == tiles[currentRow][col]->getValue() &&
-                !merged[currentRow + 1])
-            {   
-                uint16_t newValue = tiles[currentRow + 1][col]->getValue() * 2;
-                tiles[currentRow + 1][col]->setValue(
-                    newValue);
-                tiles[currentRow][col]->setValue(0);
-                merged[currentRow + 1] = 1;
-
-                // Cộng điểm
-                score += newValue;
-                if (score > bestScore)
-                bestScore = score;
-                updateScoreText();
+            else
+            {
+                // Không merge được, thêm vào vị trí mới
+                newCol[writePos++] = value;
             }
         }
+        
+        // Đảo ngược mảng để đặt vào đúng vị trí (từ dưới lên trên)
+        for (int i = 0; i < writePos / 2; ++i)
+        {
+            uint16_t temp = newCol[i];
+            newCol[i] = newCol[writePos - 1 - i];
+            newCol[writePos - 1 - i] = temp;
+        }
+        
+        // Cập nhật lại tiles từ mảng tạm
+        for (int row = 0; row < 4; ++row)
+        {
+            tiles[row][col]->setValue(newCol[row]);
+        }
     }
+    
+    if (score > bestScore)
+        bestScore = score;
+    updateScoreText();
 }
 
 void MainScreenView::handleKeyEvent(uint8_t key)
@@ -395,7 +482,7 @@ bool MainScreenView::hasGridChanged()
 void MainScreenView::handleTickEvent()
 {
     static uint32_t lastPressTime = 0;
-    const uint32_t debounceDelay = 200; // Thời gian chống dội (ms)
+    const uint32_t debounceDelay = 200;
     uint32_t currentTime = HAL_GetTick();
 
     uint8_t currentState = 0;
@@ -411,26 +498,50 @@ void MainScreenView::handleTickEvent()
     {
         if ((currentState & 1) && !(lastState & 1)) // PB10: UP
         {
+            saveGridState();  // Lưu state trước khi move
             moveUp();
-            spawnRandomTile();
+            if (hasGridChanged()) {  // Chỉ spawn nếu có thay đổi
+                spawnRandomTile();
+            }
+            if (isGameOver()) {
+                navigateToGameOverScreen();
+            }
             lastPressTime = currentTime;
         }
         else if ((currentState & 2) && !(lastState & 2)) // PB12: DOWN
         {
+            saveGridState();
             moveDown();
-            spawnRandomTile();
+            if (hasGridChanged()) {
+                spawnRandomTile();
+            }
+            if (isGameOver()) {
+                navigateToGameOverScreen();
+            }
             lastPressTime = currentTime;
         }
         else if ((currentState & 4) && !(lastState & 4)) // PA2: LEFT
         {
+            saveGridState();
             moveLeft();
-            spawnRandomTile();
+            if (hasGridChanged()) {
+                spawnRandomTile();
+            }
+            if (isGameOver()) {
+                navigateToGameOverScreen();
+            }
             lastPressTime = currentTime;
         }
         else if ((currentState & 8) && !(lastState & 8)) // PA6: RIGHT
         {
+            saveGridState();
             moveRight();
-            spawnRandomTile();
+            if (hasGridChanged()) {
+                spawnRandomTile();
+            }
+            if (isGameOver()) {
+                navigateToGameOverScreen();
+            }
             lastPressTime = currentTime;
         }
         else if ((currentState & 16) && !(lastState & 16)) // PA0: BACK
@@ -441,10 +552,5 @@ void MainScreenView::handleTickEvent()
         }
 
         lastState = currentState;
-
-        if (isGameOver())
-        {
-            navigateToGameOverScreen();
-        }
     }
 }
