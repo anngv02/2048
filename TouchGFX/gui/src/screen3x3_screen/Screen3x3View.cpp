@@ -82,11 +82,6 @@ void Screen3x3View::handleDragEvent(const DragEvent& evt)
         dragEndX = evt.getNewX();
         dragEndY = evt.getNewY();
     }
-    else if (evt.getType() == DragEvent::DRAGGED_OUT)
-    {
-        // Reset khi kéo ra khỏi vùng
-        isDragging = false;
-    }
     
     Screen3x3ViewBase::handleDragEvent(evt);
 }
@@ -112,8 +107,7 @@ void Screen3x3View::handleGestureEvent(const GestureEvent& evt)
         return;
     }
 
-    // 2. Thuật toán "Dominant Axis" (Trục chiếm ưu thế)
-    // Nếu di chuyển ngang nhiều hơn dọc -> Là vuốt Ngang
+        // Nếu di chuyển ngang nhiều hơn dọc -> Là vuốt Ngang
     if (absX > absY) 
     {
         // Đây là vuốt NGANG
