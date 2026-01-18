@@ -1,5 +1,5 @@
 Application/User/generated/CompressedUnmappedFontCache.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/fonts/src/CompressedUnmappedFontCache.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/generated/fonts/src/CompressedUnmappedFontCache.cpp \
  ../../TouchGFX/generated/fonts/include/fonts/CompressedUnmappedFontCache.hpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/FlashDataReader.hpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/Types.hpp \

@@ -1,5 +1,5 @@
 Application/User/gui/Screen5x5_letterMergingPresenter.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingPresenter.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingPresenter.cpp \
  ../../TouchGFX/gui/include/gui/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/screen5x5_lettermerging_screen/Screen5x5_letterMergingViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \

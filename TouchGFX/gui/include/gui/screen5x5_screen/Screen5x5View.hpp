@@ -4,6 +4,11 @@
 #include <gui_generated/screen5x5_screen/Screen5x5ViewBase.hpp>
 #include <gui/screen5x5_screen/Screen5x5Presenter.hpp>
 #include <gui/containers/Tile5x5.hpp>
+
+/**
+ * @class Screen5x5View
+ * @brief View trong kiến trúc MVP cho Screen5x5 (Game 2048 5x5)
+ */
 class Screen5x5View : public Screen5x5ViewBase
 {
 public:
@@ -15,12 +20,23 @@ public:
     virtual void handleGestureEvent(const GestureEvent& evt);
     virtual void handleKeyEvent(uint8_t key);
     virtual void handleTickEvent();
+
+    // ==============================================================================
+    // Public methods để Presenter gọi (MVP pattern)
+    // ==============================================================================
+    void onMoveUp();
+    void onMoveDown();
+    void onMoveLeft();
+    void onMoveRight();
+    void onNavigateBack();
+
     void spawnRandomTile();
     void navigateToGameOverScreen();
     void gotoGameOverScreen();
     bool isGameOver();
-    void saveGridState();//Hàm lưu trạng thái hiện tại
+    void saveGridState();
     bool hasGridChanged();
+
 protected:
     Tile5x5* tiles[5][5];
     uint16_t gridBeforeMove[5][5];
@@ -33,15 +49,16 @@ protected:
     uint32_t myRand();
     void updateScoreText();
     
-    // Biến để xử lý drag và gesture
     int16_t dragStartX;
     int16_t dragStartY;
     int16_t dragEndX;
     int16_t dragEndY;
     bool isDragging;
     
-    // Ngưỡng tối thiểu để tính là 1 lần vuốt (pixel)
     static const int16_t MIN_SWIPE_DISTANCE = 30;
+
+private:
+    void processAfterMove();
 };
 
 #endif // SCREEN5X5VIEW_HPP

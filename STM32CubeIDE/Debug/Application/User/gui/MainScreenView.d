@@ -1,5 +1,5 @@
 Application/User/gui/MainScreenView.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/gui/src/mainscreen_screen/MainScreenView.cpp \
  ../../TouchGFX/gui/include/gui/mainscreen_screen/MainScreenView.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/mainscreen_screen/MainScreenViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \

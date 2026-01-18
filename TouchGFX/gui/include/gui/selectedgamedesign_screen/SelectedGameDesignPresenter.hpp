@@ -8,24 +8,32 @@ using namespace touchgfx;
 
 class SelectedGameDesignView;
 
+/**
+ * @class SelectedGameDesignPresenter
+ * @brief Presenter cho màn hình SelectedGameDesign (Menu chọn kích thước game)
+ *
+ * Điều khiển:
+ * - UP (PE2): Di chuyển lên trong menu
+ * - DOWN (PE3): Di chuyển xuống trong menu
+ * - BACK/SELECT (PA0): Chọn mode hiện tại
+ */
 class SelectedGameDesignPresenter : public touchgfx::Presenter, public ModelListener
 {
 public:
     SelectedGameDesignPresenter(SelectedGameDesignView& v);
 
-    /**
-     * The activate function is called automatically when this screen is "switched in"
-     * (ie. made active). Initialization logic can be placed here.
-     */
     virtual void activate();
-
-    /**
-     * The deactivate function is called automatically when this screen is "switched out"
-     * (ie. made inactive). Teardown functionality can be placed here.
-     */
     virtual void deactivate();
 
     virtual ~SelectedGameDesignPresenter() {}
+
+    // ==============================================================================
+    // Override ModelListener virtual functions
+    // UP/DOWN: Di chuyển trong menu, BACK (PA0): Chọn mode
+    // ==============================================================================
+    virtual void onButtonUp() override;
+    virtual void onButtonDown() override;
+    virtual void onButtonBack() override;  // PA0 dùng để SELECT mode
 
 private:
     SelectedGameDesignPresenter();

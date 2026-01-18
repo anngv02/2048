@@ -20,11 +20,11 @@
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextArea.hpp:403:41:virtual const touchgfx::Unicode::UnicodeChar* touchgfx::TextArea::getWildcard2() const	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextAreaWithWildcard.hpp:84:41:virtual const touchgfx::Unicode::UnicodeChar* touchgfx::TextAreaWithOneWildcard::getWildcard1() const	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextAreaWithWildcard.hpp:62:7:touchgfx::TextAreaWithOneWildcard::~TextAreaWithOneWildcard()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:28:1:Tile_letterBase::~Tile_letterBase()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:33:6:virtual void Tile_letterBase::initialize()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:28:1:Tile_letterBase::~Tile_letterBase()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:33:6:virtual void Tile_letterBase::initialize()	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/TypedText.hpp:65:13:virtual touchgfx::TypedText::~TypedText()	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextAreaWithWildcard.hpp:62:7:virtual touchgfx::TextAreaWithOneWildcard::~TextAreaWithOneWildcard()	8	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:28:1:virtual Tile_letterBase::~Tile_letterBase()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:28:1:virtual Tile_letterBase::~Tile_letterBase()	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:121:18:virtual void touchgfx::Drawable::invalidateContent() const	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextAreaWithWildcard.hpp:43:18:virtual void touchgfx::TextAreaWithWildcardBase::invalidateContent() const	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Widget.hpp:45:18:virtual void touchgfx::Widget::getLastChild(int16_t, int16_t, touchgfx::Drawable**)	0	static
@@ -32,4 +32,4 @@ C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/s
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextAreaWithWildcard.hpp:49:36:virtual touchgfx::TextArea::BoundingArea touchgfx::TextAreaWithWildcardBase::calculateBoundingArea() const	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:48:5:touchgfx::Drawable::Drawable()	0	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:343:10:void touchgfx::Drawable::setXY(int16_t, int16_t)	16	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:8:1:Tile_letterBase::Tile_letterBase()	48	static
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/containers/Tile_letterBase.cpp:8:1:Tile_letterBase::Tile_letterBase()	48	static

@@ -39,13 +39,13 @@
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/containers/buttons/BoxWithBorderButtonStyle.hpp:41:7:virtual touchgfx::BoxWithBorderButtonStyle<touchgfx::ClickButtonTrigger>::~BoxWithBorderButtonStyle()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:357:8:virtual touchgfx::Callback<MainScreenViewBase, const touchgfx::AbstractButton&>::~Callback()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Callback.hpp:357:8:virtual touchgfx::Callback<MainScreenViewBase, const touchgfx::AbstractButtonContainer&>::~Callback()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:125:6:virtual void MainScreenViewBase::setupScreen()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:125:6:virtual void MainScreenViewBase::setupScreen()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:121:18:virtual void touchgfx::Drawable::invalidateContent() const	2
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/containers/buttons/AbstractButtonContainer.hpp:99:18:virtual void touchgfx::AbstractButtonContainer::executeAction()	3
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/Widget.hpp:45:18:virtual void touchgfx::Widget::getLastChild(int16_t, int16_t, touchgfx::Drawable**)	3
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/containers/buttons/ClickButtonTrigger.hpp:47:18:virtual void touchgfx::ClickButtonTrigger::handleClickEvent(const touchgfx::ClickEvent&)	6
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:147:6:void MainScreenViewBase::buttonCallbackHandler(const touchgfx::AbstractButton&)	2
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:163:6:void MainScreenViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer&)	3
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:147:6:void MainScreenViewBase::buttonCallbackHandler(const touchgfx::AbstractButton&)	2
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:163:6:void MainScreenViewBase::flexButtonCallbackHandler(const touchgfx::AbstractButtonContainer&)	3
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:48:5:touchgfx::Drawable::Drawable()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:343:10:void touchgfx::Drawable::setXY(int16_t, int16_t)	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:233:10:void touchgfx::Drawable::setPosition(int16_t, int16_t, int16_t, int16_t)	1
@@ -53,8 +53,8 @@ C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/s
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/ButtonWithLabel.hpp:132:10:void touchgfx::ButtonWithLabel::updateTextPosition()	2
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/widgets/TextArea.hpp:43:5:touchgfx::TextArea::TextArea()	1
 ../../TouchGFX/gui/include/gui/containers/Tile.hpp:10:13:Tile::~Tile()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:120:1:MainScreenViewBase::~MainScreenViewBase()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:120:1:virtual MainScreenViewBase::~MainScreenViewBase()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:120:1:MainScreenViewBase::~MainScreenViewBase()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:120:1:virtual MainScreenViewBase::~MainScreenViewBase()	1
 ../../TouchGFX/gui/include/gui/containers/Tile.hpp:10:13:virtual Tile::~Tile()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/containers/buttons/BoxWithBorderButtonStyle.hpp:44:5:touchgfx::BoxWithBorderButtonStyle<T>::BoxWithBorderButtonStyle() [with T = touchgfx::ClickButtonTrigger]	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:9:1:MainScreenViewBase::MainScreenViewBase()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/mainscreen_screen/MainScreenViewBase.cpp:9:1:MainScreenViewBase::MainScreenViewBase()	1

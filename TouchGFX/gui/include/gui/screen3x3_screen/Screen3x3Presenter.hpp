@@ -8,24 +8,28 @@ using namespace touchgfx;
 
 class Screen3x3View;
 
+/**
+ * @class Screen3x3Presenter
+ * @brief Presenter trong kiến trúc MVP cho Screen3x3 (Game 3x3)
+ */
 class Screen3x3Presenter : public touchgfx::Presenter, public ModelListener
 {
 public:
     Screen3x3Presenter(Screen3x3View& v);
 
-    /**
-     * The activate function is called automatically when this screen is "switched in"
-     * (ie. made active). Initialization logic can be placed here.
-     */
     virtual void activate();
-
-    /**
-     * The deactivate function is called automatically when this screen is "switched out"
-     * (ie. made inactive). Teardown functionality can be placed here.
-     */
     virtual void deactivate();
 
     virtual ~Screen3x3Presenter() {}
+
+    // ==============================================================================
+    // Override ModelListener virtual functions
+    // ==============================================================================
+    virtual void onButtonUp() override;
+    virtual void onButtonDown() override;
+    virtual void onButtonLeft() override;
+    virtual void onButtonRight() override;
+    virtual void onButtonBack() override;
 
 private:
     Screen3x3Presenter();

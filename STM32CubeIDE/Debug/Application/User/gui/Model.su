@@ -1,2 +1,7 @@
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/model/Model.cpp:4:1:Model::Model()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/model/Model.cpp:9:6:void Model::tick()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/model/Model.cpp:136:9:uint8_t Model::readButtonsGPIO()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/model/Model.cpp:199:6:void Model::buzzerOn()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/model/Model.cpp:170:6:void Model::buzzerBeep(uint32_t)	16	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/model/Model.cpp:208:6:void Model::buzzerOff()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/model/Model.cpp:30:1:Model::Model()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/model/Model.cpp:181:6:void Model::processBuzzer()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/model/Model.cpp:52:6:void Model::tick()	16	static

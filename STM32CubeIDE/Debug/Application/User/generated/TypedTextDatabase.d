@@ -1,5 +1,5 @@
 Application/User/generated/TypedTextDatabase.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/texts/src/TypedTextDatabase.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/generated/texts/src/TypedTextDatabase.cpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/TypedText.hpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Font.hpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Unicode.hpp \

@@ -4,15 +4,21 @@
 GameOverScreenPresenter::GameOverScreenPresenter(GameOverScreenView& v)
     : view(v)
 {
-
 }
 
 void GameOverScreenPresenter::activate()
 {
-
 }
 
 void GameOverScreenPresenter::deactivate()
 {
+}
 
+// ==============================================================================
+// Button Event Handler
+// ==============================================================================
+
+void GameOverScreenPresenter::onButtonBack()
+{
+    view.onNavigateBack();
 }

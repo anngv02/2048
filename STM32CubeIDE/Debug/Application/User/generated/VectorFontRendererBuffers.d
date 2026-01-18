@@ -1,5 +1,5 @@
 Application/User/generated/VectorFontRendererBuffers.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/fonts/src/VectorFontRendererBuffers.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/generated/fonts/src/VectorFontRendererBuffers.cpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/VectorFontRendererImpl.hpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/Types.hpp \
  ../../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/Config.hpp \

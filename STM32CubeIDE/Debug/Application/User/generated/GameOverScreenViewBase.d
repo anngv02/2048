@@ -1,5 +1,5 @@
 Application/User/generated/GameOverScreenViewBase.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/gameoverscreen_screen/GameOverScreenViewBase.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/gameoverscreen_screen/GameOverScreenViewBase.cpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/gameoverscreen_screen/GameOverScreenViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/common/FrontendApplicationBase.hpp \

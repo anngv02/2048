@@ -1,20 +1,26 @@
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Screen.hpp:104:18:virtual void touchgfx::Screen::afterTransition()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:66:6:virtual void Screen5x5_letterMergingView::tearDownScreen()	0	static
-../../TouchGFX/gui/include/gui/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.hpp:11:13:Screen5x5_letterMergingView::~Screen5x5_letterMergingView()	8	static
-../../TouchGFX/gui/include/gui/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.hpp:11:13:virtual Screen5x5_letterMergingView::~Screen5x5_letterMergingView()	8	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:13:10:uint32_t Screen5x5_letterMergingView::myRand()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:18:1:Screen5x5_letterMergingView::Screen5x5_letterMergingView()	8	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:109:6:void Screen5x5_letterMergingView::updateScoreText()	16	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:117:6:void Screen5x5_letterMergingView::moveLeft()	72	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:155:6:void Screen5x5_letterMergingView::moveRight()	72	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:192:6:void Screen5x5_letterMergingView::moveUp()	64	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:229:6:void Screen5x5_letterMergingView::moveDown()	64	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:345:6:void Screen5x5_letterMergingView::navigateToGameOverScreen()	8	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:349:6:bool Screen5x5_letterMergingView::isGameOver()	24	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:300:6:void Screen5x5_letterMergingView::spawnRandomTile()	160	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:395:6:virtual void Screen5x5_letterMergingView::handleTickEvent()	32	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:381:6:void Screen5x5_letterMergingView::saveGridState()	24	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:387:6:bool Screen5x5_letterMergingView::hasGridChanged()	24	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:70:6:virtual void Screen5x5_letterMergingView::handleGestureEvent(const touchgfx::GestureEvent&)	8	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:267:6:virtual void Screen5x5_letterMergingView::handleKeyEvent(uint8_t)	16	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:42:6:virtual void Screen5x5_letterMergingView::setupScreen()	32	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:76:6:virtual void Screen5x5_letterMergingView::tearDownScreen()	0	static
+../../TouchGFX/gui/include/gui/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.hpp:15:13:Screen5x5_letterMergingView::~Screen5x5_letterMergingView()	8	static
+../../TouchGFX/gui/include/gui/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.hpp:15:13:virtual Screen5x5_letterMergingView::~Screen5x5_letterMergingView()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:18:10:uint32_t Screen5x5_letterMergingView::myRand()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:24:1:Screen5x5_letterMergingView::Screen5x5_letterMergingView()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:130:6:void Screen5x5_letterMergingView::updateScoreText()	16	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:138:6:void Screen5x5_letterMergingView::moveLeft()	72	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:174:6:void Screen5x5_letterMergingView::moveRight()	72	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:209:6:void Screen5x5_letterMergingView::moveUp()	64	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:244:6:void Screen5x5_letterMergingView::moveDown()	64	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:322:6:void Screen5x5_letterMergingView::navigateToGameOverScreen()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:327:6:bool Screen5x5_letterMergingView::isGameOver()	24	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:293:6:void Screen5x5_letterMergingView::spawnRandomTile()	160	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:353:6:void Screen5x5_letterMergingView::saveGridState()	24	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:360:6:bool Screen5x5_letterMergingView::hasGridChanged()	24	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:401:6:void Screen5x5_letterMergingView::onNavigateBack()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:406:6:void Screen5x5_letterMergingView::processAfterMove()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:279:6:virtual void Screen5x5_letterMergingView::handleKeyEvent(uint8_t)	16	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:373:6:void Screen5x5_letterMergingView::onMoveUp()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:380:6:void Screen5x5_letterMergingView::onMoveDown()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:387:6:void Screen5x5_letterMergingView::onMoveLeft()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:394:6:void Screen5x5_letterMergingView::onMoveRight()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:98:6:virtual void Screen5x5_letterMergingView::handleGestureEvent(const touchgfx::GestureEvent&)	16	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:50:6:virtual void Screen5x5_letterMergingView::setupScreen()	32	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_lettermerging_screen/Screen5x5_letterMergingView.cpp:81:6:virtual void Screen5x5_letterMergingView::handleDragEvent(const touchgfx::DragEvent&)	0	static

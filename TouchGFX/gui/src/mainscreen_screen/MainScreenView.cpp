@@ -3,20 +3,40 @@
 #include <touchgfx/events/GestureEvent.hpp>
 #include <touchgfx/events/DragEvent.hpp>
 #include <cstdio>  
-#include <cstdlib>     // srand, rand - cho hàm abs()
+#include <cstdlib>     // abs()
 #include <ctime> 
 #include <gui/common/FrontendApplication.hpp>
 #include <gui/common/GameGlobal.hpp>
-#include <stm32f4xx_hal.h>
+
+// ==============================================================================
+// LƯU Ý: View KHÔNG truy cập GPIO trực tiếp - tuân thủ MVP pattern
+// GPIO polling được xử lý trong Model
+// Chỉ sử dụng HAL_GetTick() để lấy seed cho random (không phải GPIO)
+// ==============================================================================
+extern "C" {
+#include "stm32f4xx_hal.h"  // Chỉ dùng HAL_GetTick() cho random seed
+}
+
 #define TILE_SIZE 60
 static uint32_t seed = 1;
 
+/**
+ * @brief Custom random number generator (LCG algorithm)
+ * @return Số ngẫu nhiên 32-bit
+ */
 uint32_t MainScreenView::myRand()
 {
     seed = seed * 1664525UL + 1013904223UL;
     return seed;
 }
+
+/**
+ * @brief Constructor - Khởi tạo mảng tiles và biến drag
+ */
 MainScreenView::MainScreenView()
+    : score(0), bestScore(0),
+      dragStartX(0), dragStartY(0), dragEndX(0), dragEndY(0),
+      isDragging(false)
 {
     // Gán từng Tile từ Designer vào mảng 2D
     tiles[0][0] = &tile00;
@@ -38,19 +58,19 @@ MainScreenView::MainScreenView()
     tiles[3][1] = &tile31;
     tiles[3][2] = &tile32;
     tiles[3][3] = &tile33;
-    
-    // Khởi tạo biến drag
-    dragStartX = 0;
-    dragStartY = 0;
-    dragEndX = 0;
-    dragEndY = 0;
-    isDragging = false;
 }
 
+/**
+ * @brief Setup screen - khởi tạo game state
+ */
 void MainScreenView::setupScreen()
 {   
-    // Khởi tạo random seed từ timer để mỗi lần chơi có sequence khác nhau
+    // Set game mode hiện tại (để GameOver hiển thị đúng bestScore)
+    GameGlobal::currentGameMode = GAME_MODE_4X4;
+
+    // Khởi tạo random seed từ system tick để mỗi lần chơi có sequence khác nhau
     seed = HAL_GetTick();
+    if (seed == 0) seed = 12345; // Fallback nếu tick = 0
     
     score = 0;
     bestScore = GameGlobal::bestScore4x4;  // Dùng bestScore riêng cho màn 4x4
@@ -58,19 +78,23 @@ void MainScreenView::setupScreen()
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
     updateScoreText();
+
+    // Khởi tạo tất cả tiles về 0 và đặt vị trí
     for (int i = 0; i < 4; ++i)
     {
         for (int j = 0; j < 4; ++j)
         {
             tiles[i][j]->setValue(0); // ẩn ban đầu
-            tiles[i][j]->moveTo((j) * TILE_SIZE,tileOffsetY + i * TILE_SIZE);
+            tiles[i][j]->moveTo((j) * TILE_SIZE, tileOffsetY + i * TILE_SIZE);
             tiles[i][j]->centerX = (j) * TILE_SIZE + TILE_SIZE / 2;
             tiles[i][j]->centerY = tileOffsetY + i * TILE_SIZE + TILE_SIZE / 2;
         }
     }
 
+    // Spawn 2 tiles ban đầu
     tiles[0][0]->setValue(2);
     tiles[0][1]->setValue(2);
+
     MainScreenViewBase::setupScreen();
 }
 
@@ -79,6 +103,13 @@ void MainScreenView::tearDownScreen()
     MainScreenViewBase::tearDownScreen();
 }
 
+// ==============================================================================
+// TOUCH/GESTURE EVENT HANDLERS
+// ==============================================================================
+
+/**
+ * @brief Xử lý sự kiện drag (kéo ngón tay trên màn hình)
+ */
 void MainScreenView::handleDragEvent(const DragEvent& evt)
 {
     if (evt.getType() == DragEvent::DRAGGED)
@@ -98,6 +129,10 @@ void MainScreenView::handleDragEvent(const DragEvent& evt)
     MainScreenViewBase::handleDragEvent(evt);
 }
 
+/**
+ * @brief Xử lý sự kiện gesture (vuốt trên màn hình cảm ứng)
+ * Touch gesture xử lý trực tiếp trong View (không qua Model)
+ */
 void MainScreenView::handleGestureEvent(const GestureEvent& evt)
 {
     // Nếu chưa từng nhận Drag trước đó, bỏ qua
@@ -131,13 +166,117 @@ void MainScreenView::handleGestureEvent(const GestureEvent& evt)
         // Đây là vuốt DỌC
         // Lưu ý: Hệ tọa độ màn hình Y tăng dần xuống dưới
         // Sửa: Đảo ngược logic deltaY để khắc phục vấn đề vuốt xuống đi lên
-        if (deltaY > 0) moveUp();
-        else            moveDown();
+    	if (deltaY > 0) moveDown();
+    	else            moveUp();
     }
 
-    // 3. Reset trạng thái & Xử lý Game logic
+    // Reset trạng thái & Xử lý Game logic
     isDragging = false;
+    processAfterMove();
+}
 
+/**
+ * @brief Xử lý phím từ keyboard (cho simulator/debug)
+ */
+void MainScreenView::handleKeyEvent(uint8_t key)
+{
+    saveGridState();
+    switch (key)
+    {
+    case '4':
+        moveLeft();
+        break;
+    case '6':
+        moveRight();
+        break;
+    case '8':
+        moveUp();
+        break;
+    case '2':
+        moveDown();
+        break;
+    default:
+        return; // Không xử lý key khác
+    }
+    processAfterMove();
+}
+
+/**
+ * @brief handleTickEvent - được gọi mỗi frame
+ *
+ * THAY ĐỔI MVP: Đã xóa logic GPIO polling trực tiếp
+ * GPIO polling giờ được xử lý trong Model::tick()
+ * View chỉ xử lý UI updates/animations nếu cần
+ */
+void MainScreenView::handleTickEvent()
+{
+    // ==============================================================================
+    // LƯU Ý: KHÔNG CÒN GPIO POLLING Ở ĐÂY
+    // GPIO polling được xử lý trong Model::tick()
+    // View nhận events thông qua Presenter (MVP pattern)
+    // ==============================================================================
+
+    // Có thể thêm logic update animation ở đây nếu cần
+}
+
+// ==============================================================================
+// PUBLIC METHODS - ĐƯỢC GỌI TỪ PRESENTER (MVP PATTERN)
+// ==============================================================================
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút UP
+ */
+void MainScreenView::onMoveUp()
+{
+    saveGridState();
+    moveUp();
+    processAfterMove();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút DOWN
+ */
+void MainScreenView::onMoveDown()
+{
+    saveGridState();
+    moveDown();
+    processAfterMove();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút LEFT
+ */
+void MainScreenView::onMoveLeft()
+{
+    saveGridState();
+    moveLeft();
+    processAfterMove();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút RIGHT
+ */
+void MainScreenView::onMoveRight()
+{
+    saveGridState();
+    moveRight();
+    processAfterMove();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút BACK
+ */
+void MainScreenView::onNavigateBack()
+{
+    application().gotoSelectedGameDesignScreenCoverTransitionEast();
+}
+
+/**
+ * @brief Xử lý chung sau khi move (spawn tile, check game over)
+ * Hàm private để tái sử dụng code
+ */
+void MainScreenView::processAfterMove()
+{
     if (hasGridChanged()) {
         spawnRandomTile();
     }
@@ -146,7 +285,14 @@ void MainScreenView::handleGestureEvent(const GestureEvent& evt)
         navigateToGameOverScreen();
     }
 }
-//cap nhat diem
+
+// ==============================================================================
+// SCORE METHODS
+// ==============================================================================
+
+/**
+ * @brief Cập nhật hiển thị điểm số
+ */
 void MainScreenView::updateScoreText()
 {   
     GameGlobal::yourScore = score;
@@ -154,7 +300,14 @@ void MainScreenView::updateScoreText()
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
 }
-//di chuyen trai
+
+// ==============================================================================
+// MOVE METHODS
+// ==============================================================================
+
+/**
+ * @brief Di chuyển tiles sang trái
+ */
 void MainScreenView::moveLeft()
 {
     for (int row = 0; row < 4; ++row)
@@ -192,6 +345,10 @@ void MainScreenView::moveLeft()
         }
     }
 }
+
+/**
+ * @brief Di chuyển tiles sang phải
+ */
 void MainScreenView::moveRight()
 {
     for (int row = 0; row < 4; ++row)
@@ -228,6 +385,10 @@ void MainScreenView::moveRight()
         }
     }
 }
+
+/**
+ * @brief Di chuyển tiles lên trên
+ */
 void MainScreenView::moveUp()
 {
     for (int col = 0; col < 4; ++col)
@@ -264,6 +425,10 @@ void MainScreenView::moveUp()
         }
     }
 }
+
+/**
+ * @brief Di chuyển tiles xuống dưới
+ */
 void MainScreenView::moveDown()
 {
     for (int col = 0; col < 4; ++col)
@@ -301,39 +466,13 @@ void MainScreenView::moveDown()
     }
 }
 
-void MainScreenView::handleKeyEvent(uint8_t key)
-{   
-    saveGridState();
-    switch (key)
-    {
-    case '4':
-        moveLeft();
-        //spawnRandomTile(); 
-        break;
-    case '6':
-        moveRight();
-        //spawnRandomTile();  
-        break;
-    case '8':
-        moveUp();
-        //spawnRandomTile(); 
-        break;
-    case '2':
-        moveDown();
-        //spawnRandomTile();     
-        break;
-    default:
-        break;
-    }
-    if(hasGridChanged()){
-        spawnRandomTile();
-    }
-     // Sau khi di chuyển + spawn → kiểm tra thua
-    if (isGameOver())
-    {
-        navigateToGameOverScreen();
-    }
-}
+// ==============================================================================
+// GAME STATE METHODS
+// ==============================================================================
+
+/**
+ * @brief Spawn tile ngẫu nhiên vào ô trống
+ */
 void MainScreenView::spawnRandomTile()
 {
     // 1) Tạo danh sách các ô còn trống
@@ -351,39 +490,38 @@ void MainScreenView::spawnRandomTile()
 
     // 2) Nếu có ô trống, chọn ngẫu nhiên một ô
     if (emptyCount > 0) {
-        // Khởi tạo seed lần đầu (bạn có thể làm trong constructor)
-//        static bool seeded = false;
-//        if (!seeded) {
-//            std::srand(12345);
-//            seeded = true;
-//        }
-//        int idx = std::rand() % emptyCount;
-//        int rr = empties[idx].row;
-//        int cc = empties[idx].col;
-//
-//        // 3) Đặt giá trị 2 vào ô đó
-//        tiles[rr][cc]->setValue(2);
         int idx = myRand() % emptyCount;
         int rr = empties[idx].row;
         int cc = empties[idx].col;
-//        tiles[rr][cc]->setValue(2);
 
+        // 3) Đặt giá trị 2 hoặc 4 (10% chance là 4)
         uint16_t newValue = (myRand() % 10 == 0) ? 4 : 2;
         tiles[rr][cc]->setValue(newValue);
-        tiles[rr][cc]->animateSpawn();//animation spawn
+        tiles[rr][cc]->animateSpawn(); // animation spawn
     }
     else {
-        // KHÔNG còn ô trống kiem tra xem co the gop duoc khong neu khong thi chuyen sang Game Over
+        // KHÔNG còn ô trống - kiểm tra game over
         if (isGameOver()) {
-        navigateToGameOverScreen();
-    }
+            navigateToGameOverScreen();
+        }
     }
 }
+
+/**
+ * @brief Chuyển sang màn hình Game Over
+ * Kích hoạt buzzer beep 1 giây trước khi chuyển màn hình
+ */
 void MainScreenView::navigateToGameOverScreen()
 {
-   static_cast<FrontendApplication*>(Application::getInstance())->gotoGameOverScreenScreenSlideTransitionEast();
+    presenter->notifyGameOver();  // Buzzer beep 1 giây
+    static_cast<FrontendApplication*>(Application::getInstance())->gotoGameOverScreenScreenSlideTransitionEast();
 }
-bool MainScreenView::isGameOver() // kiem tra xem con co the gop cac o lai voi nhau khong
+
+/**
+ * @brief Kiểm tra game over (không còn nước đi hợp lệ)
+ * @return true nếu game over, false nếu còn nước đi
+ */
+bool MainScreenView::isGameOver()
 {
     // 1. Kiểm tra còn ô trống không
     for (int r = 0; r < 4; ++r)
@@ -415,12 +553,21 @@ bool MainScreenView::isGameOver() // kiem tra xem con co the gop cac o lai voi n
     // Không còn nước đi hợp lệ
     return true;
 }
+
+/**
+ * @brief Lưu trạng thái grid hiện tại (trước khi move)
+ */
 void MainScreenView::saveGridState()
 {
     for (int i = 0; i < 4; ++i)
         for (int j = 0; j < 4; ++j)
             gridBeforeMove[i][j] = tiles[i][j]->getValue();
 }
+
+/**
+ * @brief Kiểm tra grid có thay đổi sau khi move không
+ * @return true nếu có thay đổi, false nếu không
+ */
 bool MainScreenView::hasGridChanged()
 {
     for (int i = 0; i < 4; ++i)
@@ -428,79 +575,4 @@ bool MainScreenView::hasGridChanged()
             if (gridBeforeMove[i][j] != tiles[i][j]->getValue())
                 return true;
     return false;
-}
-void MainScreenView::handleTickEvent()
-{
-    static uint32_t lastPressTime = 0;
-    const uint32_t debounceDelay = 200;
-    uint32_t currentTime = HAL_GetTick();
-
-    uint8_t currentState = 0;
-    currentState |= (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10) == GPIO_PIN_SET ? 1 : 0);  // PB10: UP
-    currentState |= (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET ? 2 : 0);  // PB12: DOWN
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_SET ? 4 : 0);   // PA2: LEFT
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6) == GPIO_PIN_SET ? 8 : 0);   // PA6: RIGHT
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET ? 16 : 0);  // PA0: BACK
-
-    static uint8_t lastState = 0;
-
-    if (currentTime - lastPressTime > debounceDelay)
-    {
-        if ((currentState & 1) && !(lastState & 1)) // PB10: UP
-        {
-            saveGridState();  // Lưu state trước khi move
-            moveUp();
-            if (hasGridChanged()) {  // Chỉ spawn nếu có thay đổi
-                spawnRandomTile();
-            }
-            if (isGameOver()) {
-                navigateToGameOverScreen();
-            }
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 2) && !(lastState & 2)) // PB12: DOWN
-        {
-            saveGridState();
-            moveDown();
-            if (hasGridChanged()) {
-                spawnRandomTile();
-            }
-            if (isGameOver()) {
-                navigateToGameOverScreen();
-            }
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 4) && !(lastState & 4)) // PA2: LEFT
-        {
-            saveGridState();
-            moveLeft();
-            if (hasGridChanged()) {
-                spawnRandomTile();
-            }
-            if (isGameOver()) {
-                navigateToGameOverScreen();
-            }
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 8) && !(lastState & 8)) // PA6: RIGHT
-        {
-            saveGridState();
-            moveRight();
-            if (hasGridChanged()) {
-                spawnRandomTile();
-            }
-            if (isGameOver()) {
-                navigateToGameOverScreen();
-            }
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 16) && !(lastState & 16)) // PA0: BACK
-        {
-            // Về màn hình Chosing_mode
-        	application().gotoSelectedGameDesignScreenCoverTransitionEast();
-            lastPressTime = currentTime;
-        }
-
-        lastState = currentState;
-    }
 }

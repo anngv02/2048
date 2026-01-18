@@ -8,24 +8,27 @@ using namespace touchgfx;
 
 class Chosing_modeView;
 
+/**
+ * @class Chosing_modePresenter
+ * @brief Presenter cho màn hình Chosing_mode (Menu chọn chế độ game)
+ */
 class Chosing_modePresenter : public touchgfx::Presenter, public ModelListener
 {
 public:
     Chosing_modePresenter(Chosing_modeView& v);
 
-    /**
-     * The activate function is called automatically when this screen is "switched in"
-     * (ie. made active). Initialization logic can be placed here.
-     */
     virtual void activate();
-
-    /**
-     * The deactivate function is called automatically when this screen is "switched out"
-     * (ie. made inactive). Teardown functionality can be placed here.
-     */
     virtual void deactivate();
 
     virtual ~Chosing_modePresenter() {}
+
+    // ==============================================================================
+    // Override ModelListener virtual functions
+    // UP/DOWN: Di chuyển trong menu, BACK (PA0): Chọn mode
+    // ==============================================================================
+    virtual void onButtonUp() override;
+    virtual void onButtonDown() override;
+    virtual void onButtonBack() override;  // PA0 dùng để SELECT mode
 
 private:
     Chosing_modePresenter();

@@ -2,12 +2,16 @@
 #include <touchgfx/Utils.hpp>
 #include <touchgfx/events/GestureEvent.hpp>
 #include <touchgfx/events/DragEvent.hpp>
-#include <cstdio>  // hoặc stdio.h nếu bạn thích C-style
-#include <cstdlib>     // srand, rand - cho hàm abs()
+#include <cstdio>
+#include <cstdlib>
 #include <ctime> 
 #include <gui/common/FrontendApplication.hpp>
 #include <gui/common/GameGlobal.hpp>
-#include <stm32f4xx_hal.h>
+
+// ==============================================================================
+// LƯU Ý: View KHÔNG truy cập GPIO trực tiếp - tuân thủ MVP pattern
+// ==============================================================================
+
 #define TILE_SIZE 60
 static uint32_t seed = 1;
 
@@ -16,9 +20,12 @@ uint32_t Screen5x5_letterMergingView::myRand()
     seed = seed * 1664525UL + 1013904223UL;
     return seed;
 }
+
 Screen5x5_letterMergingView::Screen5x5_letterMergingView()
+    : score(0), bestScore(0),
+      dragStartX(0), dragStartY(0), dragEndX(0), dragEndY(0),
+      isDragging(false)
 {
-     // Gán từng Tile từ Designer vào mảng 2D
     tiles[0][0] = &tile_letter1;
     tiles[0][1] = &tile_letter2;
     tiles[0][2] = &tile_letter3;
@@ -38,19 +45,14 @@ Screen5x5_letterMergingView::Screen5x5_letterMergingView()
     tiles[3][1] = &tile_letter14;
     tiles[3][2] = &tile_letter15;
     tiles[3][3] = &tile_letter16;
-    
-    // Khởi tạo biến drag
-    dragStartX = 0;
-    dragStartY = 0;
-    dragEndX = 0;
-    dragEndY = 0;
-    isDragging = false;
 }
 
 void Screen5x5_letterMergingView::setupScreen()
 {    
+    // Set game mode hiện tại (để GameOver hiển thị đúng bestScore)
+    GameGlobal::currentGameMode = GAME_MODE_5X5_LETTER;
     score = 0;
-    bestScore = GameGlobal::bestScore5x5Letter;  // Dùng bestScore riêng cho màn 5x5 Letter Merging
+    bestScore = GameGlobal::bestScore5x5Letter;
     const int tileOffsetY = 80;
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
@@ -60,7 +62,7 @@ void Screen5x5_letterMergingView::setupScreen()
         for (int j = 0; j < 4; ++j)
         {
             tiles[i][j]->setValue(0xFFFF); // ẩn ban đầu
-            tiles[i][j]->moveTo((j) * TILE_SIZE,tileOffsetY + i * TILE_SIZE);
+            tiles[i][j]->moveTo((j) * TILE_SIZE, tileOffsetY + i * TILE_SIZE);
             tiles[i][j]->centerX = (j) * TILE_SIZE + TILE_SIZE / 2;
             tiles[i][j]->centerY = tileOffsetY + i * TILE_SIZE + TILE_SIZE / 2;
         }
@@ -82,12 +84,10 @@ void Screen5x5_letterMergingView::handleDragEvent(const DragEvent& evt)
     {
         if (!isDragging)
         {
-            // Lưu điểm bắt đầu
             dragStartX = evt.getOldX();
             dragStartY = evt.getOldY();
             isDragging = true;
         }
-        // Cập nhật điểm cuối liên tục
         dragEndX = evt.getNewX();
         dragEndY = evt.getNewY();
     }
@@ -97,64 +97,49 @@ void Screen5x5_letterMergingView::handleDragEvent(const DragEvent& evt)
 
 void Screen5x5_letterMergingView::handleGestureEvent(const GestureEvent& evt)
 {
-    // Nếu chưa từng nhận Drag trước đó, bỏ qua
     if (!isDragging) return;
     
-    // Tính delta từ điểm bắt đầu và điểm cuối
+    saveGridState();
+
     int16_t deltaX = dragEndX - dragStartX;
     int16_t deltaY = dragEndY - dragStartY;
     
-    // Tính độ dài vector
     int16_t absX = abs(deltaX);
     int16_t absY = abs(deltaY);
 
-    // 1. Kiểm tra độ dài tối thiểu (Lọc nhiễu rung tay)
     if (absX < MIN_SWIPE_DISTANCE && absY < MIN_SWIPE_DISTANCE) {
         isDragging = false;
         return;
     }
 
-        // Nếu di chuyển ngang nhiều hơn dọc -> Là vuốt Ngang
     if (absX > absY) 
     {
-        // Đây là vuốt NGANG
         if (deltaX > 0) moveRight();
         else            moveLeft();
     }
     else 
     {
-        // Đây là vuốt DỌC
-        // Lưu ý: Hệ tọa độ màn hình Y tăng dần xuống dưới
         if (deltaY > 0) moveDown();
         else            moveUp();
     }
 
-    // 3. Reset trạng thái & Xử lý Game logic
     isDragging = false;
-
-    if (hasGridChanged()) {
-        spawnRandomTile();  // chi spawn neu co thay doi
-    }
-    
-    if (isGameOver())
-    {
-        navigateToGameOverScreen();
-    }
+    processAfterMove();
 }
-//cap nhat diem
+
 void Screen5x5_letterMergingView::updateScoreText()
 {   
     GameGlobal::yourScore = score;
-    GameGlobal::bestScore5x5Letter = bestScore;  // Lưu bestScore riêng cho màn 5x5 Letter Merging
+    GameGlobal::bestScore5x5Letter = bestScore;
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
 }
-//di chuyen trai
+
 void Screen5x5_letterMergingView::moveLeft()
 {
     for (int row = 0; row < 4; ++row)
     {
-        int merged[4] = {0}; // theo dõi các tile đã merge
+        int merged[4] = {0};
 
         for (int col = 1; col < 4; ++col)
         {
@@ -169,25 +154,23 @@ void Screen5x5_letterMergingView::moveLeft()
                 currentCol--;
             }
 
-            // Nếu có thể gộp
             if (currentCol > 0 &&
                 tiles[row][currentCol - 1]->getValue() == tiles[row][currentCol]->getValue() &&
                 !merged[currentCol - 1])
             {   
                 uint16_t newValue = tiles[row][currentCol - 1]->getValue() + 1;
-                tiles[row][currentCol - 1]->setValue(
-                    newValue);
+                tiles[row][currentCol - 1]->setValue(newValue);
                 tiles[row][currentCol]->setValue(0xFFFF);
                 merged[currentCol - 1] = 1;
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
     }
 }
+
 void Screen5x5_letterMergingView::moveRight()
 {
     for (int row = 0; row < 4; ++row)
@@ -211,20 +194,18 @@ void Screen5x5_letterMergingView::moveRight()
                 !merged[currentCol + 1])
             {   
                 uint16_t newValue = tiles[row][currentCol + 1]->getValue() + 1;
-                tiles[row][currentCol + 1]->setValue(
-                    newValue);
+                tiles[row][currentCol + 1]->setValue(newValue);
                 tiles[row][currentCol]->setValue(0xFFFF);
                 merged[currentCol + 1] = 1;
-
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
     }
 }
+
 void Screen5x5_letterMergingView::moveUp()
 {
     for (int col = 0; col < 4; ++col)
@@ -248,20 +229,18 @@ void Screen5x5_letterMergingView::moveUp()
                 !merged[currentRow - 1])
             {   
                 uint16_t newValue = tiles[currentRow - 1][col]->getValue() + 1;
-                tiles[currentRow - 1][col]->setValue(
-                    newValue);
+                tiles[currentRow - 1][col]->setValue(newValue);
                 tiles[currentRow][col]->setValue(0xFFFF);
                 merged[currentRow - 1] = 1;
-
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
     }
 }
+
 void Screen5x5_letterMergingView::moveDown()
 {
     for (int col = 0; col < 4; ++col)
@@ -285,15 +264,12 @@ void Screen5x5_letterMergingView::moveDown()
                 !merged[currentRow + 1])
             {   
                 uint16_t newValue = tiles[currentRow + 1][col]->getValue() + 1;
-                tiles[currentRow + 1][col]->setValue(
-                    newValue);
+                tiles[currentRow + 1][col]->setValue(newValue);
                 tiles[currentRow][col]->setValue(0xFFFF);
                 merged[currentRow + 1] = 1;
-
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
@@ -305,37 +281,17 @@ void Screen5x5_letterMergingView::handleKeyEvent(uint8_t key)
     saveGridState();
     switch (key)
     {
-    case '4':
-        moveLeft();
-        //spawnRandomTile(); 
-        break;
-    case '6':
-        moveRight();
-        //spawnRandomTile();  
-        break;
-    case '8':
-        moveUp();
-        //spawnRandomTile(); 
-        break;
-    case '2':
-        moveDown();
-        //spawnRandomTile();     
-        break;
-    default:
-        break;
+    case '4': moveLeft(); break;
+    case '6': moveRight(); break;
+    case '8': moveUp(); break;
+    case '2': moveDown(); break;
+    default: return;
     }
-    if(hasGridChanged()){
-        spawnRandomTile();
-    }
-     // Sau khi di chuyển + spawn → kiểm tra thua
-    if (isGameOver())
-    {
-        navigateToGameOverScreen();
-    }
+    processAfterMove();
 }
+
 void Screen5x5_letterMergingView::spawnRandomTile()
 {
-    // 1) Tạo danh sách các ô còn trống
     struct Pos { int row, col; };
     Pos empties[16];
     int emptyCount = 0;
@@ -348,78 +304,60 @@ void Screen5x5_letterMergingView::spawnRandomTile()
         }
     }
 
-        // 2) Nếu có ô trống, chọn ngẫu nhiên một ô
     if (emptyCount > 0) {
-        // Khởi tạo seed lần đầu (bạn có thể làm trong constructor)
-//        static bool seeded = false;
-//        if (!seeded) {
-//            std::srand(12345);
-//            seeded = true;
-//        }
-//        int idx = std::rand() % emptyCount;
-//        int rr = empties[idx].row;
-//        int cc = empties[idx].col;
-//
-//        // 3) Đặt giá trị 2 vào ô đó
-//        tiles[rr][cc]->setValue(2);
         int idx = myRand() % emptyCount;
         int rr = empties[idx].row;
         int cc = empties[idx].col;
-//        tiles[rr][cc]->setValue(2);
-
         
         tiles[rr][cc]->setValue(0);
-        tiles[rr][cc]->animateSpawn();//animation spawn
+        tiles[rr][cc]->animateSpawn();
     }
     else {
-        // KHÔNG còn ô trống kiem tra xem co the gop duoc khong neu khong thi chuyen sang Game Over
         if (isGameOver()) {
-        navigateToGameOverScreen();
-    }
+            navigateToGameOverScreen();
+        }
     }
 }
+
 void Screen5x5_letterMergingView::navigateToGameOverScreen()
 {
-   static_cast<FrontendApplication*>(Application::getInstance())->gotoGameOverScreenScreenSlideTransitionEast();
+    presenter->notifyGameOver();  // Buzzer beep 1 giây
+    static_cast<FrontendApplication*>(Application::getInstance())->gotoGameOverScreenScreenSlideTransitionEast();
 }
-bool Screen5x5_letterMergingView::isGameOver() // kiem tra xem con co the gop cac o lai voi nhau khong
+
+bool Screen5x5_letterMergingView::isGameOver()
 {
-    // 1. Kiểm tra còn ô trống không
     for (int r = 0; r < 4; ++r)
     {
         for (int c = 0; c < 4; ++c)
         {
             if (tiles[r][c]->getValue() == 0xFFFF)
-                return false; // còn chỗ để spawn => chưa thua
+                return false;
         }
     }
 
-    // 2. Kiểm tra còn ô nào có thể gộp không
     for (int r = 0; r < 4; ++r)
     {
         for (int c = 0; c < 4; ++c)
         {
             int current = tiles[r][c]->getValue();
-
-            // Kiểm tra phải
             if (c < 3 && tiles[r][c + 1]->getValue() == current)
                 return false;
-
-            // Kiểm tra dưới
             if (r < 3 && tiles[r + 1][c]->getValue() == current)
                 return false;
         }
     }
 
-    // Không còn nước đi hợp lệ
     return true;
 }
+
 void Screen5x5_letterMergingView::saveGridState()
 {
     for (int i = 0; i < 4; ++i)
         for (int j = 0; j < 4; ++j)
             gridBeforeMove[i][j] = tiles[i][j]->getValue();
 }
+
 bool Screen5x5_letterMergingView::hasGridChanged()
 {
     for (int i = 0; i < 4; ++i)
@@ -428,60 +366,58 @@ bool Screen5x5_letterMergingView::hasGridChanged()
                 return true;
     return false;
 }
-void Screen5x5_letterMergingView::handleTickEvent()
+
+// ==============================================================================
+// PUBLIC METHODS - ĐƯỢC GỌI TỪ PRESENTER (MVP PATTERN)
+// ==============================================================================
+
+void Screen5x5_letterMergingView::onMoveUp()
 {
-    static uint32_t lastPressTime = 0;
-    const uint32_t debounceDelay = 200; // Thời gian chống dội (ms)
-    uint32_t currentTime = HAL_GetTick();
+    saveGridState();
+    moveUp();
+    processAfterMove();
+}
 
-    uint8_t currentState = 0;
-    currentState |= (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10) == GPIO_PIN_SET ? 1 : 0);  // PB10: UP
-    currentState |= (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET ? 2 : 0);  // PB12: DOWN
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_SET ? 4 : 0);   // PA2: LEFT
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6) == GPIO_PIN_SET ? 8 : 0);   // PA6: RIGHT
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET ? 16 : 0);  // PA0: BACK
+void Screen5x5_letterMergingView::onMoveDown()
+{
+    saveGridState();
+    moveDown();
+    processAfterMove();
+}
 
-    static uint8_t lastState = 0;
+void Screen5x5_letterMergingView::onMoveLeft()
+{
+    saveGridState();
+    moveLeft();
+    processAfterMove();
+}
 
-    if (currentTime - lastPressTime > debounceDelay)
-    {
-        if ((currentState & 1) && !(lastState & 1)) // PB10: UP
-        {
-            moveUp();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 2) && !(lastState & 2)) // PB12: DOWN
-        {
-            moveDown();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 4) && !(lastState & 4)) // PA2: LEFT
-        {
-            moveLeft();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 8) && !(lastState & 8)) // PA6: RIGHT
-        {
-            moveRight();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 16) && !(lastState & 16)) // PA0: BACK
-        {
-            // Về màn hình Chosing_mode
-            application().gotoChosing_modeScreenWipeTransitionEast();
-            lastPressTime = currentTime;
-        }
+void Screen5x5_letterMergingView::onMoveRight()
+{
+    saveGridState();
+    moveRight();
+    processAfterMove();
+}
 
-        lastState = currentState;
+void Screen5x5_letterMergingView::onNavigateBack()
+{
+    application().gotoChosing_modeScreenWipeTransitionEast();
+}
 
-        if (isGameOver())
-        {
-            navigateToGameOverScreen();
-        }
+void Screen5x5_letterMergingView::processAfterMove()
+{
+    if (hasGridChanged()) {
+        spawnRandomTile();
+    }
+    if (isGameOver()) {
+        navigateToGameOverScreen();
     }
 }
 
+/**
+ * @brief handleTickEvent - GPIO polling đã được chuyển sang Model
+ */
+void Screen5x5_letterMergingView::handleTickEvent()
+{
+    // GPIO polling được xử lý trong Model::tick()
+}

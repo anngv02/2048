@@ -1,5 +1,5 @@
 Application/User/generated/Chosing_modeViewBase.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/chosing_mode_screen/Chosing_modeViewBase.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/chosing_mode_screen/Chosing_modeViewBase.cpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/chosing_mode_screen/Chosing_modeViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/common/FrontendApplicationBase.hpp \

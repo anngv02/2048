@@ -1,5 +1,10 @@
-../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenPresenter.hpp:28:13:GameOverScreenPresenter::~GameOverScreenPresenter()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenPresenter.cpp:10:6:virtual void GameOverScreenPresenter::activate()	0	static
-../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenPresenter.hpp:28:13:virtual GameOverScreenPresenter::~GameOverScreenPresenter()	8	static
-../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenPresenter.hpp:28:13:virtual void* GameOverScreenPresenter::_ZThn4_N23GameOverScreenPresenterD1Ev()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenPresenter.cpp:4:1:GameOverScreenPresenter::GameOverScreenPresenter(GameOverScreenView&)	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:42:18:virtual void ModelListener::onButtonUp()	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:47:18:virtual void ModelListener::onButtonDown()	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:52:18:virtual void ModelListener::onButtonLeft()	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:57:18:virtual void ModelListener::onButtonRight()	0	static
+../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenPresenter.hpp:23:13:GameOverScreenPresenter::~GameOverScreenPresenter()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenPresenter.cpp:9:6:virtual void GameOverScreenPresenter::activate()	0	static
+../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenPresenter.hpp:23:13:virtual GameOverScreenPresenter::~GameOverScreenPresenter()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenPresenter.cpp:21:6:virtual void GameOverScreenPresenter::onButtonBack()	0	static
+../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenPresenter.hpp:23:13:virtual void* GameOverScreenPresenter::_ZThn4_N23GameOverScreenPresenterD1Ev()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenPresenter.cpp:4:1:GameOverScreenPresenter::GameOverScreenPresenter(GameOverScreenView&)	0	static

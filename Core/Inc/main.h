@@ -58,16 +58,20 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define VSYNC_FREQ_Pin GPIO_PIN_2
-#define VSYNC_FREQ_GPIO_Port GPIOE
-#define RENDER_TIME_Pin GPIO_PIN_3
-#define RENDER_TIME_GPIO_Port GPIOE
-#define FRAME_RATE_Pin GPIO_PIN_4
-#define FRAME_RATE_GPIO_Port GPIOE
-#define MCU_ACTIVE_Pin GPIO_PIN_5
-#define MCU_ACTIVE_GPIO_Port GPIOE
+#define UP_Pin GPIO_PIN_2
+#define UP_GPIO_Port GPIOE
+#define DOWN_Pin GPIO_PIN_3
+#define DOWN_GPIO_Port GPIOE
+#define LEFT_Pin GPIO_PIN_4
+#define LEFT_GPIO_Port GPIOE
+#define RIGHT_Pin GPIO_PIN_5
+#define RIGHT_GPIO_Port GPIOE
+#define JOY_SW_Pin GPIO_PIN_6
+#define JOY_SW_GPIO_Port GPIOE
 #define SPI5_NCS_Pin GPIO_PIN_1
 #define SPI5_NCS_GPIO_Port GPIOC
+#define BUZZER_Pin GPIO_PIN_4
+#define BUZZER_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 

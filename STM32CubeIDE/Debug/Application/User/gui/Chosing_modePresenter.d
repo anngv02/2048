@@ -1,5 +1,5 @@
 Application/User/gui/Chosing_modePresenter.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp \
  ../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modeView.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/chosing_mode_screen/Chosing_modeViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \

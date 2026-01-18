@@ -1,5 +1,5 @@
 Application/User/generated/Screen3x3ViewBase.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/screen3x3_screen/Screen3x3ViewBase.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/screen3x3_screen/Screen3x3ViewBase.cpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/screen3x3_screen/Screen3x3ViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/common/FrontendApplicationBase.hpp \

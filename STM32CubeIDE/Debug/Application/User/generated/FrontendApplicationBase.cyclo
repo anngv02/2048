@@ -40,34 +40,34 @@
 ../../Middlewares/ST/touchgfx/framework/include/mvp/MVPApplication.hpp:59:18:virtual void touchgfx::MVPApplication::handlePendingScreenTransition()	3
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/transitions/SlideTransition.hpp:87:18:void touchgfx::SlideTransition<templateDirection>::handleTickEvent() [with touchgfx::Direction templateDirection = touchgfx::EAST]	4
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/hal/HAL.hpp:308:17:static touchgfx::LCD& touchgfx::HAL::lcd()	3
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:31:1:FrontendApplicationBase::FrontendApplicationBase(Model&, FrontendHeap&)	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:50:6:void FrontendApplicationBase::gotoChosing_modeScreenNoTransition()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:61:6:void FrontendApplicationBase::gotoChosing_modeScreenCoverTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:72:6:void FrontendApplicationBase::gotoChosing_modeScreenWipeTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:83:6:void FrontendApplicationBase::gotoChosing_modeScreenBlockTransition()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:96:6:void FrontendApplicationBase::gotoScreen5x5ScreenCoverTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:109:6:void FrontendApplicationBase::gotoScreen5x5_superMergingScreenSlideTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:122:6:void FrontendApplicationBase::gotoScreen3x3ScreenCoverTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:135:6:void FrontendApplicationBase::gotoMainScreenScreenCoverTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:148:6:void FrontendApplicationBase::gotoScreen5x5_letterMergingScreenSlideTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:161:6:void FrontendApplicationBase::gotoGameOverScreenScreenSlideTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:174:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenSlideTransitionEast()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:185:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenCoverTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:31:1:FrontendApplicationBase::FrontendApplicationBase(Model&, FrontendHeap&)	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:50:6:void FrontendApplicationBase::gotoChosing_modeScreenNoTransition()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:61:6:void FrontendApplicationBase::gotoChosing_modeScreenCoverTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:72:6:void FrontendApplicationBase::gotoChosing_modeScreenWipeTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:83:6:void FrontendApplicationBase::gotoChosing_modeScreenBlockTransition()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:96:6:void FrontendApplicationBase::gotoScreen5x5ScreenCoverTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:109:6:void FrontendApplicationBase::gotoScreen5x5_superMergingScreenSlideTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:122:6:void FrontendApplicationBase::gotoScreen3x3ScreenCoverTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:135:6:void FrontendApplicationBase::gotoMainScreenScreenCoverTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:148:6:void FrontendApplicationBase::gotoScreen5x5_letterMergingScreenSlideTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:161:6:void FrontendApplicationBase::gotoGameOverScreenScreenSlideTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:174:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenSlideTransitionEast()	1
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:185:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenCoverTransitionEast()	1
 ../../Middlewares/ST/touchgfx/framework/include/common/AbstractPartition.hpp:135:8:T& touchgfx::AbstractPartition::at(uint16_t) [with T = Chosing_modeView]	1
 ../../Middlewares/ST/touchgfx/framework/include/common/AbstractPartition.hpp:135:8:T& touchgfx::AbstractPartition::at(uint16_t) [with T = Chosing_modePresenter]	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:89:6:void FrontendApplicationBase::gotoChosing_modeScreenBlockTransitionImpl()	8
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:78:6:void FrontendApplicationBase::gotoChosing_modeScreenWipeTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:56:6:void FrontendApplicationBase::gotoChosing_modeScreenNoTransitionImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:89:6:void FrontendApplicationBase::gotoChosing_modeScreenBlockTransitionImpl()	8
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:78:6:void FrontendApplicationBase::gotoChosing_modeScreenWipeTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:56:6:void FrontendApplicationBase::gotoChosing_modeScreenNoTransitionImpl()	7
 ../../Middlewares/ST/touchgfx/framework/include/common/AbstractPartition.hpp:135:8:T& touchgfx::AbstractPartition::at(uint16_t) [with T = touchgfx::CoverTransition<touchgfx::EAST>]	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/transitions/CoverTransition.hpp:44:5:touchgfx::CoverTransition<templateDirection>::CoverTransition(uint8_t) [with touchgfx::Direction templateDirection = touchgfx::EAST]	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:191:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenCoverTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:141:6:void FrontendApplicationBase::gotoMainScreenScreenCoverTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:128:6:void FrontendApplicationBase::gotoScreen3x3ScreenCoverTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:102:6:void FrontendApplicationBase::gotoScreen5x5ScreenCoverTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:67:6:void FrontendApplicationBase::gotoChosing_modeScreenCoverTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:191:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenCoverTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:141:6:void FrontendApplicationBase::gotoMainScreenScreenCoverTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:128:6:void FrontendApplicationBase::gotoScreen3x3ScreenCoverTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:102:6:void FrontendApplicationBase::gotoScreen5x5ScreenCoverTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:67:6:void FrontendApplicationBase::gotoChosing_modeScreenCoverTransitionEastImpl()	7
 ../../Middlewares/ST/touchgfx/framework/include/common/AbstractPartition.hpp:135:8:T& touchgfx::AbstractPartition::at(uint16_t) [with T = touchgfx::SlideTransition<touchgfx::EAST>]	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/transitions/SlideTransition.hpp:47:5:touchgfx::SlideTransition<templateDirection>::SlideTransition(uint8_t) [with touchgfx::Direction templateDirection = touchgfx::EAST]	2
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:180:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenSlideTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:167:6:void FrontendApplicationBase::gotoGameOverScreenScreenSlideTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:154:6:void FrontendApplicationBase::gotoScreen5x5_letterMergingScreenSlideTransitionEastImpl()	7
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:115:6:void FrontendApplicationBase::gotoScreen5x5_superMergingScreenSlideTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:180:6:void FrontendApplicationBase::gotoSelectedGameDesignScreenSlideTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:167:6:void FrontendApplicationBase::gotoGameOverScreenScreenSlideTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:154:6:void FrontendApplicationBase::gotoScreen5x5_letterMergingScreenSlideTransitionEastImpl()	7
+C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/common/FrontendApplicationBase.cpp:115:6:void FrontendApplicationBase::gotoScreen5x5_superMergingScreenSlideTransitionEastImpl()	7

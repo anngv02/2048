@@ -1,5 +1,10 @@
-../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modePresenter.hpp:28:13:Chosing_modePresenter::~Chosing_modePresenter()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp:10:6:virtual void Chosing_modePresenter::activate()	0	static
-../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modePresenter.hpp:28:13:virtual Chosing_modePresenter::~Chosing_modePresenter()	8	static
-../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modePresenter.hpp:28:13:virtual void* Chosing_modePresenter::_ZThn4_N21Chosing_modePresenterD1Ev()	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp:4:1:Chosing_modePresenter::Chosing_modePresenter(Chosing_modeView&)	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:52:18:virtual void ModelListener::onButtonLeft()	0	static
+../../TouchGFX/gui/include/gui/model/ModelListener.hpp:57:18:virtual void ModelListener::onButtonRight()	0	static
+../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modePresenter.hpp:23:13:Chosing_modePresenter::~Chosing_modePresenter()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp:9:6:virtual void Chosing_modePresenter::activate()	0	static
+../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modePresenter.hpp:23:13:virtual Chosing_modePresenter::~Chosing_modePresenter()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp:25:6:virtual void Chosing_modePresenter::onButtonUp()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp:34:6:virtual void Chosing_modePresenter::onButtonDown()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp:43:6:virtual void Chosing_modePresenter::onButtonBack()	0	static
+../../TouchGFX/gui/include/gui/chosing_mode_screen/Chosing_modePresenter.hpp:23:13:virtual void* Chosing_modePresenter::_ZThn4_N21Chosing_modePresenterD1Ev()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/chosing_mode_screen/Chosing_modePresenter.cpp:4:1:Chosing_modePresenter::Chosing_modePresenter(Chosing_modeView&)	0	static

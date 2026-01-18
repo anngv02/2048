@@ -12,6 +12,6 @@
 ../../TouchGFX/gui/include/gui/containers/Best.hpp:10:13:Best::~Best()	1
 ../../TouchGFX/gui/include/gui/containers/Best.hpp:10:13:virtual Best::~Best()	1
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:121:18:virtual void touchgfx::Drawable::invalidateContent() const	2
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/containers/Best.cpp:3:1:Best::Best()	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/containers/Best.cpp:13:6:void Best::setScore(uint32_t)	1
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/containers/Best.cpp:8:6:virtual void Best::initialize()	1
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/containers/Best.cpp:3:1:Best::Best()	1
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/containers/Best.cpp:13:6:void Best::setScore(uint32_t)	1
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/containers/Best.cpp:8:6:virtual void Best::initialize()	1

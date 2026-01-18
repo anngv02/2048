@@ -1,18 +1,25 @@
 #include <gui/gameoverscreen_screen/GameOverScreenView.hpp>
 #include <gui/common/GameGlobal.hpp>
-#include <stm32f4xx_hal.h>
+
+// ==============================================================================
+// LƯU Ý: View KHÔNG truy cập GPIO trực tiếp - tuân thủ MVP pattern
+// ==============================================================================
+
 GameOverScreenView::GameOverScreenView()
 {
-
 }
 
 void GameOverScreenView::setupScreen()
 {   
     // Gán dữ liệu vào các TextArea buffer
+    // yourScore: điểm của ván vừa chơi
+    // getCurrentBestScore(): lấy best score của game mode vừa chơi
     Unicode::snprintf(scoreTextBuffer, SCORETEXT_SIZE, "%u", GameGlobal::yourScore);
-    Unicode::snprintf(bestTextBuffer, BESTTEXT_SIZE, "%u", GameGlobal::bestScore);
+    Unicode::snprintf(bestTextBuffer, BESTTEXT_SIZE, "%u", GameGlobal::getCurrentBestScore());
+
     scoreText.invalidate();
     bestText.invalidate();
+
     GameOverScreenViewBase::setupScreen();
 }
 
@@ -20,25 +27,21 @@ void GameOverScreenView::tearDownScreen()
 {
     GameOverScreenViewBase::tearDownScreen();
 }
+
+/**
+ * @brief handleTickEvent - GPIO polling đã được chuyển sang Model
+ */
 void GameOverScreenView::handleTickEvent()
 {
-    static uint32_t lastPressTime = 0;
-    const uint32_t debounceDelay = 200; // Thời gian chống dội (ms)
-    uint32_t currentTime = HAL_GetTick();
+    // GPIO polling được xử lý trong Model::tick()
+    // View nhận events thông qua Presenter (MVP pattern)
+}
 
-    uint8_t currentState = 0;
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET ? 1 : 0);  // PA0: BACK
+// ==============================================================================
+// PUBLIC METHOD - ĐƯỢC GỌI TỪ PRESENTER (MVP PATTERN)
+// ==============================================================================
 
-    static uint8_t lastState = 0;
-
-    if (currentTime - lastPressTime > debounceDelay)
-    {
-        if ((currentState & 1) && !(lastState & 1)) // PA0: BACK
-        {
-            application().gotoChosing_modeScreenBlockTransition();
-            lastPressTime = currentTime;
-        }
-
-        lastState = currentState;
-    }
+void GameOverScreenView::onNavigateBack()
+{
+    application().gotoChosing_modeScreenBlockTransition();
 }

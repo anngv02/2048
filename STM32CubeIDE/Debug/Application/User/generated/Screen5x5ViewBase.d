@@ -1,5 +1,5 @@
 Application/User/generated/Screen5x5ViewBase.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/generated/gui_generated/src/screen5x5_screen/Screen5x5ViewBase.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/generated/gui_generated/src/screen5x5_screen/Screen5x5ViewBase.cpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/screen5x5_screen/Screen5x5ViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/common/FrontendApplicationBase.hpp \

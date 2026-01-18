@@ -1,5 +1,5 @@
 Application/User/gui/GameOverScreenPresenter.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenPresenter.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/gui/src/gameoverscreen_screen/GameOverScreenPresenter.cpp \
  ../../TouchGFX/gui/include/gui/gameoverscreen_screen/GameOverScreenView.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/gameoverscreen_screen/GameOverScreenViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \

@@ -1,5 +1,5 @@
 Application/User/gui/Screen5x5_superMergingPresenter.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingPresenter.cpp \
+ C:/TouchGFXProjects/20481/TouchGFX/gui/src/screen5x5_supermerging_screen/Screen5x5_superMergingPresenter.cpp \
  ../../TouchGFX/gui/include/gui/screen5x5_supermerging_screen/Screen5x5_superMergingView.hpp \
  ../../TouchGFX/generated/gui_generated/include/gui_generated/screen5x5_supermerging_screen/Screen5x5_superMergingViewBase.hpp \
  ../../TouchGFX/gui/include/gui/common/FrontendApplication.hpp \

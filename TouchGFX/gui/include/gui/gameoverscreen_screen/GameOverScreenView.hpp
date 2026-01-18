@@ -4,6 +4,10 @@
 #include <gui_generated/gameoverscreen_screen/GameOverScreenViewBase.hpp>
 #include <gui/gameoverscreen_screen/GameOverScreenPresenter.hpp>
 
+/**
+ * @class GameOverScreenView
+ * @brief View cho màn hình Game Over
+ */
 class GameOverScreenView : public GameOverScreenViewBase
 {
 public:
@@ -12,6 +16,12 @@ public:
     virtual void setupScreen();
     virtual void tearDownScreen();
     virtual void handleTickEvent();
+
+    // ==============================================================================
+    // Public method để Presenter gọi (MVP pattern)
+    // ==============================================================================
+    void onNavigateBack();
+
 protected:
 };
 

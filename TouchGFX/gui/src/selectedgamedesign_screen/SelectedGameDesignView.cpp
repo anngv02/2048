@@ -1,6 +1,14 @@
 #include <gui/selectedgamedesign_screen/SelectedGameDesignView.hpp>
 #include <touchgfx/Color.hpp>
-#include <stm32f4xx_hal.h>
+
+// ==============================================================================
+// LƯU Ý: View KHÔNG truy cập GPIO trực tiếp - tuân thủ MVP pattern
+// GPIO polling được xử lý trong Model::tick()
+// Các chân GPIO mới:
+//   - PE2 (UP): Di chuyển lên
+//   - PE3 (DOWN): Di chuyển xuống
+//   - PA0 (BACK/SELECT): Chọn mode
+// ==============================================================================
 
 SelectedGameDesignView::SelectedGameDesignView()
     : SelectedGameDesignViewBase(),
@@ -19,6 +27,10 @@ void SelectedGameDesignView::tearDownScreen()
 {
     SelectedGameDesignViewBase::tearDownScreen();
 }
+
+// ==============================================================================
+// INTERNAL METHODS - Logic di chuyển menu
+// ==============================================================================
 
 void SelectedGameDesignView::moveUp()
 {
@@ -68,6 +80,7 @@ void SelectedGameDesignView::selectMode()
 
 void SelectedGameDesignView::updateHighlight()
 {
+    // Highlight nút đang được chọn (màu đỏ), các nút khác màu xanh
     btn3x3.setBoxWithBorderColors(
         (currentIndex == 0) ? touchgfx::Color::getColorFromRGB(255, 0, 0)
                             : touchgfx::Color::getColorFromRGB(0, 102, 153),
@@ -101,41 +114,39 @@ void SelectedGameDesignView::updateHighlight()
     flexButton1.invalidate();
 }
 
+// ==============================================================================
+// PUBLIC METHODS - ĐƯỢC GỌI TỪ PRESENTER (MVP PATTERN)
+// ==============================================================================
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút UP (PE2)
+ */
+void SelectedGameDesignView::onMoveUp()
+{
+    moveUp();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút DOWN (PE3)
+ */
+void SelectedGameDesignView::onMoveDown()
+{
+    moveDown();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút SELECT (PA0)
+ */
+void SelectedGameDesignView::onSelectMode()
+{
+    selectMode();
+}
+
+/**
+ * @brief handleTickEvent - GPIO polling đã được chuyển sang Model
+ */
 void SelectedGameDesignView::handleTickEvent()
 {
-    static bool firstTick = true;
-    static uint8_t lastUpBtn;
-    static uint8_t lastDownBtn;
-    static uint8_t lastSelectBtn;
-
-    uint8_t upBtn = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10);
-    uint8_t downBtn = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
-    uint8_t selectBtn = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
-
-    if (firstTick)
-    {
-        lastUpBtn = upBtn;
-        lastDownBtn = downBtn;
-        lastSelectBtn = selectBtn;
-        firstTick = false;
-        return;
-    }
-
-    if (upBtn == GPIO_PIN_RESET && lastUpBtn == GPIO_PIN_SET)
-    {
-        moveUp();
-    }
-    lastUpBtn = upBtn;
-
-    if (downBtn == GPIO_PIN_RESET && lastDownBtn == GPIO_PIN_SET)
-    {
-        moveDown();
-    }
-    lastDownBtn = downBtn;
-
-    if (selectBtn == GPIO_PIN_RESET && lastSelectBtn == GPIO_PIN_SET)
-    {
-        selectMode();
-    }
-    lastSelectBtn = selectBtn;
+    // GPIO polling được xử lý trong Model::tick()
+    // View nhận events thông qua Presenter (MVP pattern)
 }

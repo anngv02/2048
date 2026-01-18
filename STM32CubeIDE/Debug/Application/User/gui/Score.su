@@ -12,6 +12,6 @@
 ../../TouchGFX/gui/include/gui/containers/Score.hpp:10:13:Score::~Score()	8	static
 ../../TouchGFX/gui/include/gui/containers/Score.hpp:10:13:virtual Score::~Score()	8	static
 ../../Middlewares/ST/touchgfx/framework/include/touchgfx/Drawable.hpp:121:18:virtual void touchgfx::Drawable::invalidateContent() const	0	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/containers/Score.cpp:3:1:Score::Score()	8	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/containers/Score.cpp:15:6:void Score::setScore(uint32_t)	8	static
-C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/TouchGFX/gui/src/containers/Score.cpp:8:6:virtual void Score::initialize()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/containers/Score.cpp:3:1:Score::Score()	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/containers/Score.cpp:15:6:void Score::setScore(uint32_t)	8	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/containers/Score.cpp:8:6:virtual void Score::initialize()	8	static

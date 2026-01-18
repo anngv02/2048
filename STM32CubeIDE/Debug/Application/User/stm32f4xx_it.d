@@ -1,6 +1,5 @@
 Application/User/stm32f4xx_it.o: \
- C:/Embedded/STM32F429ZIT6_Game2048/2048/20481/Core/Src/stm32f4xx_it.c \
- ../../Core/Inc/main.h \
+ C:/TouchGFXProjects/20481/Core/Src/stm32f4xx_it.c ../../Core/Inc/main.h \
  ../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../../Core/Inc/stm32f4xx_hal_conf.h \
  ../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \

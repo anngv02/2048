@@ -1,0 +1,2 @@
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/common/GameGlobal.cpp:21:10:static uint32_t GameGlobal::getCurrentBestScore()	0	static
+C:/TouchGFXProjects/20481/TouchGFX/gui/src/common/GameGlobal.cpp:43:6:static void GameGlobal::updateCurrentBestScore(uint32_t)	0	static

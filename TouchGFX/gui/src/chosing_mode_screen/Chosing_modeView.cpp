@@ -1,6 +1,14 @@
 #include <gui/chosing_mode_screen/Chosing_modeView.hpp>
 #include <touchgfx/Color.hpp>
-#include <stm32f4xx_hal.h>
+
+// ==============================================================================
+// LƯU Ý: View KHÔNG truy cập GPIO trực tiếp - tuân thủ MVP pattern
+// GPIO polling được xử lý trong Model::tick()
+// Các chân GPIO mới:
+//   - PE2 (UP): Di chuyển lên
+//   - PE3 (DOWN): Di chuyển xuống
+//   - PA0 (BACK/SELECT): Chọn mode
+// ==============================================================================
 
 #define MODE_COUNT 3
 
@@ -21,6 +29,10 @@ void Chosing_modeView::tearDownScreen()
 {
     Chosing_modeViewBase::tearDownScreen();
 }
+
+// ==============================================================================
+// INTERNAL METHODS - Logic di chuyển menu
+// ==============================================================================
 
 void Chosing_modeView::moveUp()
 {
@@ -60,6 +72,7 @@ void Chosing_modeView::selectMode()
 
 void Chosing_modeView::updateHighlight()
 {
+    // Highlight nút đang được chọn (màu đỏ), các nút khác màu xanh
     flexButton1.setBoxWithBorderColors(
         (currentIndex == 0) ? touchgfx::Color::getColorFromRGB(255, 0, 0)
                             : touchgfx::Color::getColorFromRGB(0, 102, 153),
@@ -85,42 +98,39 @@ void Chosing_modeView::updateHighlight()
     flexButton3.invalidate();
 }
 
+// ==============================================================================
+// PUBLIC METHODS - ĐƯỢC GỌI TỪ PRESENTER (MVP PATTERN)
+// ==============================================================================
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút UP (PE2)
+ */
+void Chosing_modeView::onMoveUp()
+{
+    moveUp();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút DOWN (PE3)
+ */
+void Chosing_modeView::onMoveDown()
+{
+    moveDown();
+}
+
+/**
+ * @brief Xử lý khi Presenter báo nhấn nút SELECT (PA0)
+ */
+void Chosing_modeView::onSelectMode()
+{
+    selectMode();
+}
+
+/**
+ * @brief handleTickEvent - GPIO polling đã được chuyển sang Model
+ */
 void Chosing_modeView::handleTickEvent()
 {
-    static bool firstTick = true;
-
-    static uint8_t lastPB10;
-    static uint8_t lastPB12;
-    static uint8_t lastPA0;
-
-    uint8_t PB10 = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10);
-    uint8_t PB12 = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
-    uint8_t PA0 = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0);
-
-    if (firstTick)
-    {
-        lastPB10 = PB10;
-        lastPB12 = PB12;
-        lastPA0 = PA0;
-        firstTick = false;
-        return;
-    }
-
-    if (PB10 == GPIO_PIN_RESET && lastPB10 == GPIO_PIN_SET)
-    {
-        moveUp();
-    }
-    lastPB10 = PB10;
-
-    if (PB12 == GPIO_PIN_RESET && lastPB12 == GPIO_PIN_SET)
-    {
-        moveDown();
-    }
-    lastPB12 = PB12;
-
-    if (PA0 == GPIO_PIN_RESET && lastPA0 == GPIO_PIN_SET)
-    {
-        selectMode();
-    }
-    lastPA0 = PA0;
+    // GPIO polling được xử lý trong Model::tick()
+    // View nhận events thông qua Presenter (MVP pattern)
 }

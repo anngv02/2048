@@ -8,24 +8,28 @@ using namespace touchgfx;
 
 class Screen5x5_letterMergingView;
 
+/**
+ * @class Screen5x5_letterMergingPresenter
+ * @brief Presenter trong kiến trúc MVP cho Screen5x5_letterMerging
+ */
 class Screen5x5_letterMergingPresenter : public touchgfx::Presenter, public ModelListener
 {
 public:
     Screen5x5_letterMergingPresenter(Screen5x5_letterMergingView& v);
 
-    /**
-     * The activate function is called automatically when this screen is "switched in"
-     * (ie. made active). Initialization logic can be placed here.
-     */
     virtual void activate();
-
-    /**
-     * The deactivate function is called automatically when this screen is "switched out"
-     * (ie. made inactive). Teardown functionality can be placed here.
-     */
     virtual void deactivate();
 
     virtual ~Screen5x5_letterMergingPresenter() {}
+
+    // ==============================================================================
+    // Override ModelListener virtual functions
+    // ==============================================================================
+    virtual void onButtonUp() override;
+    virtual void onButtonDown() override;
+    virtual void onButtonLeft() override;
+    virtual void onButtonRight() override;
+    virtual void onButtonBack() override;
 
 private:
     Screen5x5_letterMergingPresenter();

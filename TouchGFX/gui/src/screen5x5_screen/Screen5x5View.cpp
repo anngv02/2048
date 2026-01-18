@@ -2,13 +2,17 @@
 #include <touchgfx/Utils.hpp>
 #include <touchgfx/events/GestureEvent.hpp>
 #include <touchgfx/events/DragEvent.hpp>
-#include <cstdio>  // hoặc stdio.h nếu bạn thích C-style
-#include <cstdlib>     // srand, rand - cho hàm abs()
+#include <cstdio>
+#include <cstdlib>
 #include <ctime> 
 #include <gui/common/FrontendApplication.hpp>
 #include <vector>
 #include <gui/common/GameGlobal.hpp>
-#include <stm32f4xx_hal.h>
+
+// ==============================================================================
+// LƯU Ý: View KHÔNG truy cập GPIO trực tiếp - tuân thủ MVP pattern
+// ==============================================================================
+
 #define TILE_SIZE 48
 static uint32_t seed = 1;
 
@@ -17,9 +21,12 @@ uint32_t Screen5x5View::myRand()
     seed = seed * 1664525UL + 1013904223UL;
     return seed;
 }
+
 Screen5x5View::Screen5x5View()
+    : score(0), bestScore(0),
+      dragStartX(0), dragStartY(0), dragEndX(0), dragEndY(0),
+      isDragging(false)
 {
-    // Gán từng Tile từ Designer vào mảng 2D
     tiles[0][0] = &tile5x51;
     tiles[0][1] = &tile5x52;
     tiles[0][2] = &tile5x53;
@@ -49,19 +56,15 @@ Screen5x5View::Screen5x5View()
     tiles[4][2] = &tile5x523;
     tiles[4][3] = &tile5x524;
     tiles[4][4] = &tile5x525;
-    
-    // Khởi tạo biến drag
-    dragStartX = 0;
-    dragStartY = 0;
-    dragEndX = 0;
-    dragEndY = 0;
-    isDragging = false;
 }
 
 void Screen5x5View::setupScreen()
 {   
+    // Set game mode hiện tại (để GameOver hiển thị đúng bestScore)
+    GameGlobal::currentGameMode = GAME_MODE_5X5;
+
     score = 0;
-    bestScore = GameGlobal::bestScore5x5;  // Dùng bestScore riêng cho màn 5x5
+    bestScore = GameGlobal::bestScore5x5;
     const int tileOffsetY = 80;
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
@@ -70,8 +73,8 @@ void Screen5x5View::setupScreen()
     {
         for (int j = 0; j < 5; ++j)
         {
-            tiles[i][j]->setValue(0); // ẩn ban đầu
-            tiles[i][j]->moveTo((j) * TILE_SIZE,tileOffsetY + i * TILE_SIZE);
+            tiles[i][j]->setValue(0);
+            tiles[i][j]->moveTo((j) * TILE_SIZE, tileOffsetY + i * TILE_SIZE);
             tiles[i][j]->centerX = (j) * TILE_SIZE + TILE_SIZE / 2;
             tiles[i][j]->centerY = tileOffsetY + i * TILE_SIZE + TILE_SIZE / 2;
         }
@@ -93,12 +96,10 @@ void Screen5x5View::handleDragEvent(const DragEvent& evt)
     {
         if (!isDragging)
         {
-            // Lưu điểm bắt đầu
             dragStartX = evt.getOldX();
             dragStartY = evt.getOldY();
             isDragging = true;
         }
-        // Cập nhật điểm cuối liên tục
         dragEndX = evt.getNewX();
         dragEndY = evt.getNewY();
     }
@@ -108,64 +109,49 @@ void Screen5x5View::handleDragEvent(const DragEvent& evt)
 
 void Screen5x5View::handleGestureEvent(const GestureEvent& evt)
 {   
-    // Nếu chưa từng nhận Drag trước đó, bỏ qua
     if (!isDragging) return;
 
-    saveGridState(); //luu trang thai truoc khi chuyen
+    saveGridState();
     
-    // Tính delta từ điểm bắt đầu và điểm cuối
     int16_t deltaX = dragEndX - dragStartX;
     int16_t deltaY = dragEndY - dragStartY;
     
-    // Tính độ dài vector
     int16_t absX = abs(deltaX);
     int16_t absY = abs(deltaY);
 
-    // 1. Kiểm tra độ dài tối thiểu (Lọc nhiễu rung tay)
     if (absX < MIN_SWIPE_DISTANCE && absY < MIN_SWIPE_DISTANCE) {
         isDragging = false;
         return;
     }
 
-        // Nếu di chuyển ngang nhiều hơn dọc -> Là vuốt Ngang
     if (absX > absY) 
     {
-        // Đây là vuốt NGANG
         if (deltaX > 0) moveRight();
         else            moveLeft();
     }
     else 
     {
-        // Đây là vuốt DỌC
-        // Lưu ý: Hệ tọa độ màn hình Y tăng dần xuống dưới
         if (deltaY > 0) moveDown();
         else            moveUp();
     }
 
-    // 3. Reset trạng thái & Xử lý Game logic
     isDragging = false;
-
-    if (hasGridChanged()) {
-        spawnRandomTile();  // chi spawn neu co thay doi
-    }
-    
-    if (isGameOver())
-    {
-        navigateToGameOverScreen();
-    }
+    processAfterMove();
 }
+
 void Screen5x5View::updateScoreText()
 {   
     GameGlobal::yourScore = score;
-    GameGlobal::bestScore5x5 = bestScore;  // Lưu bestScore riêng cho màn 5x5
+    GameGlobal::bestScore5x5 = bestScore;
     scoreContainer.setScore(score);
     bestContainer.setScore(bestScore);
 }
+
 void Screen5x5View::moveLeft()
 {
     for (int row = 0; row < 5; ++row)
     {
-        int merged[5] = {0}; // theo dõi các tile đã merge
+        int merged[5] = {0};
 
         for (int col = 1; col < 5; ++col)
         {
@@ -180,25 +166,23 @@ void Screen5x5View::moveLeft()
                 currentCol--;
             }
 
-            // Nếu có thể gộp
             if (currentCol > 0 &&
                 tiles[row][currentCol - 1]->getValue() == tiles[row][currentCol]->getValue() &&
                 !merged[currentCol - 1])
             {   
                 uint16_t newValue = tiles[row][currentCol - 1]->getValue() * 2;
-                tiles[row][currentCol - 1]->setValue(
-                    newValue);
+                tiles[row][currentCol - 1]->setValue(newValue);
                 tiles[row][currentCol]->setValue(0);
                 merged[currentCol - 1] = 1;
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
     }
 }
+
 void Screen5x5View::moveRight()
 {
     for (int row = 0; row < 5; ++row)
@@ -222,22 +206,17 @@ void Screen5x5View::moveRight()
                 !merged[currentCol + 1])
             {   
                 uint16_t newValue = tiles[row][currentCol + 1]->getValue() * 2;
-                tiles[row][currentCol + 1]->setValue(
-                    newValue);
+                tiles[row][currentCol + 1]->setValue(newValue);
                 tiles[row][currentCol]->setValue(0);
                 merged[currentCol + 1] = 1;
-
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
     }
 }
-
-
 
 void Screen5x5View::moveUp()
 {
@@ -262,20 +241,18 @@ void Screen5x5View::moveUp()
                 !merged[currentRow - 1])
             {   
                 uint16_t newValue = tiles[currentRow - 1][col]->getValue() * 2;
-                tiles[currentRow - 1][col]->setValue(
-                    newValue);
+                tiles[currentRow - 1][col]->setValue(newValue);
                 tiles[currentRow][col]->setValue(0);
                 merged[currentRow - 1] = 1;
-
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
     }
 }
+
 void Screen5x5View::moveDown()
 {
     for (int col = 0; col < 5; ++col)
@@ -299,56 +276,34 @@ void Screen5x5View::moveDown()
                 !merged[currentRow + 1])
             {   
                 uint16_t newValue = tiles[currentRow + 1][col]->getValue() * 2;
-                tiles[currentRow + 1][col]->setValue(
-                    newValue);
+                tiles[currentRow + 1][col]->setValue(newValue);
                 tiles[currentRow][col]->setValue(0);
                 merged[currentRow + 1] = 1;
-
-                // Cộng điểm
                 score += newValue;
                 if (score > bestScore)
-                bestScore = score;
+                    bestScore = score;
                 updateScoreText();
             }
         }
     }
 }
+
 void Screen5x5View::handleKeyEvent(uint8_t key)
 {   
     saveGridState();
     switch (key)
     {
-    case '4':
-        moveLeft();
-        //spawnRandomTile(); 
-        break;
-    case '6':
-        moveRight();
-        //spawnRandomTile();  
-        break;
-    case '8':
-        moveUp();
-        //spawnRandomTile(); 
-        break;
-    case '2':
-        moveDown();
-        //spawnRandomTile();     
-        break;
-    default:
-        break;
+    case '4': moveLeft(); break;
+    case '6': moveRight(); break;
+    case '8': moveUp(); break;
+    case '2': moveDown(); break;
+    default: return;
     }
-    if(hasGridChanged()){
-        spawnRandomTile();
-    }
-     // Sau khi di chuyển + spawn → kiểm tra thua
-    if (isGameOver())
-    {
-        navigateToGameOverScreen();
-    }
+    processAfterMove();
 }
+
 void Screen5x5View::spawnRandomTile()
 {
-    // 1) Tạo danh sách các ô còn trống
     struct Pos { int row, col; };
     Pos empties[25];
     int emptyCount = 0;
@@ -361,78 +316,61 @@ void Screen5x5View::spawnRandomTile()
         }
     }
 
-        // 2) Nếu có ô trống, chọn ngẫu nhiên một ô
     if (emptyCount > 0) {
-        // Khởi tạo seed lần đầu (bạn có thể làm trong constructor)
-//        static bool seeded = false;
-//        if (!seeded) {
-//            std::srand(12345);
-//            seeded = true;
-//        }
-//        int idx = std::rand() % emptyCount;
-//        int rr = empties[idx].row;
-//        int cc = empties[idx].col;
-//
-//        // 3) Đặt giá trị 2 vào ô đó
-//        tiles[rr][cc]->setValue(2);
         int idx = myRand() % emptyCount;
         int rr = empties[idx].row;
         int cc = empties[idx].col;
-//        tiles[rr][cc]->setValue(2);
 
         uint16_t newValue = (myRand() % 10 == 0) ? 4 : 2;
         tiles[rr][cc]->setValue(newValue);
-        tiles[rr][cc]->animateSpawn();//animation spawn
+        tiles[rr][cc]->animateSpawn();
     }
     else {
-        // KHÔNG còn ô trống kiem tra xem co the gop duoc khong neu khong thi chuyen sang Game Over
         if (isGameOver()) {
-        navigateToGameOverScreen();
-    }
+            navigateToGameOverScreen();
+        }
     }
 }
+
 void Screen5x5View::navigateToGameOverScreen()
 {
-   static_cast<FrontendApplication*>(Application::getInstance())->gotoGameOverScreenScreenSlideTransitionEast();
+    presenter->notifyGameOver();  // Buzzer beep 1 giây
+    static_cast<FrontendApplication*>(Application::getInstance())->gotoGameOverScreenScreenSlideTransitionEast();
 }
-bool Screen5x5View::isGameOver() // kiem tra xem con co the gop cac o lai voi nhau khong
+
+bool Screen5x5View::isGameOver()
 {
-    // 1. Kiểm tra còn ô trống không
     for (int r = 0; r < 5; ++r)
     {
         for (int c = 0; c < 5; ++c)
         {
             if (tiles[r][c]->getValue() == 0)
-                return false; // còn chỗ để spawn => chưa thua
+                return false;
         }
     }
 
-    // 2. Kiểm tra còn ô nào có thể gộp không
     for (int r = 0; r < 5; ++r)
     {
         for (int c = 0; c < 5; ++c)
         {
             int current = tiles[r][c]->getValue();
-
-            // Kiểm tra phải
             if (c < 4 && tiles[r][c + 1]->getValue() == current)
                 return false;
-
-            // Kiểm tra dưới
             if (r < 4 && tiles[r + 1][c]->getValue() == current)
                 return false;
         }
     }
 
-    // Không còn nước đi hợp lệ
     return true;
 }
+
 void Screen5x5View::saveGridState()
 {
     for (int i = 0; i < 5; ++i)
         for (int j = 0; j < 5; ++j)
             gridBeforeMove[i][j] = tiles[i][j]->getValue();
 }
+
 bool Screen5x5View::hasGridChanged()
 {
     for (int i = 0; i < 5; ++i)
@@ -441,59 +379,58 @@ bool Screen5x5View::hasGridChanged()
                 return true;
     return false;
 }
+
+// ==============================================================================
+// PUBLIC METHODS - ĐƯỢC GỌI TỪ PRESENTER (MVP PATTERN)
+// ==============================================================================
+
+void Screen5x5View::onMoveUp()
+{
+    saveGridState();
+    moveUp();
+    processAfterMove();
+}
+
+void Screen5x5View::onMoveDown()
+{
+    saveGridState();
+    moveDown();
+    processAfterMove();
+}
+
+void Screen5x5View::onMoveLeft()
+{
+    saveGridState();
+    moveLeft();
+    processAfterMove();
+}
+
+void Screen5x5View::onMoveRight()
+{
+    saveGridState();
+    moveRight();
+    processAfterMove();
+}
+
+void Screen5x5View::onNavigateBack()
+{
+    application().gotoSelectedGameDesignScreenCoverTransitionEast();
+}
+
+void Screen5x5View::processAfterMove()
+{
+    if (hasGridChanged()) {
+        spawnRandomTile();
+    }
+    if (isGameOver()) {
+        navigateToGameOverScreen();
+    }
+}
+
+/**
+ * @brief handleTickEvent - GPIO polling đã được chuyển sang Model
+ */
 void Screen5x5View::handleTickEvent()
 {
-    static uint32_t lastPressTime = 0;
-    const uint32_t debounceDelay = 200; // Thời gian chống dội (ms)
-    uint32_t currentTime = HAL_GetTick();
-
-    uint8_t currentState = 0;
-    currentState |= (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10) == GPIO_PIN_SET ? 1 : 0);  // PB10: UP
-    currentState |= (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET ? 2 : 0);  // PB12: DOWN
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_SET ? 4 : 0);   // PA2: LEFT
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6) == GPIO_PIN_SET ? 8 : 0);   // PA6: RIGHT
-    currentState |= (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_0) == GPIO_PIN_SET ? 16 : 0);  // PA0: BACK
-
-    static uint8_t lastState = 0;
-
-    if (currentTime - lastPressTime > debounceDelay)
-    {
-        if ((currentState & 1) && !(lastState & 1)) // PB10: UP
-        {
-            moveUp();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 2) && !(lastState & 2)) // PB12: DOWN
-        {
-            moveDown();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 4) && !(lastState & 4)) // PA2: LEFT
-        {
-            moveLeft();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 8) && !(lastState & 8)) // PA6: RIGHT
-        {
-            moveRight();
-            spawnRandomTile();
-            lastPressTime = currentTime;
-        }
-        else if ((currentState & 16) && !(lastState & 16)) // PA0: BACK
-        {
-            // Về màn hình Chosing_mode
-        	application().gotoSelectedGameDesignScreenCoverTransitionEast();
-            lastPressTime = currentTime;
-        }
-
-        lastState = currentState;
-
-        if (isGameOver())
-        {
-            navigateToGameOverScreen();
-        }
-    }
+    // GPIO polling được xử lý trong Model::tick()
 }
