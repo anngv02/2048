@@ -14,9 +14,10 @@ This is a 2048 game developed for the STM32F429I Discovery board (REV D01). The 
 ### Features:
 - Touch control (swipe gestures)
 - GPIO button control (UP, DOWN, LEFT, RIGHT, BACK)
-- Analog Joystick control with Hysteresis
+- Analog Joystick control with Hysteresis and Diagonal Movement Fix
 - Buzzer feedback for button presses and game over
 - Score system and best score for each game mode
+- Template-based Game Engine (`Game2048Engine`) for reusable game logic
 - Animation when spawning new tiles
 - Game Over screen when no valid moves remain
 
@@ -133,6 +134,8 @@ ADC Value (0-4095)
        │   ▼
   1000 ┼─────── MIN_THRESHOLD (Trigger DOWN/RIGHT)
        │
+  2048 ┤─────── CENTER VALUE
+       │
      0 ┤
 ```
 
@@ -143,6 +146,12 @@ ADC Value (0-4095)
 | Y < 1000 | DOWN |
 | X > 3000 | LEFT |
 | X < 1000 | RIGHT |
+
+### Diagonal Movement Handling:
+When the joystick is moved diagonally, both X and Y axes exceed thresholds simultaneously. To prevent double buzzer beeps, the system uses **dominant axis selection**:
+- Calculate displacement from center: `|X - 2048|` and `|Y - 2048|`
+- Only trigger the direction with the **larger displacement**
+- Example: If `X = 3500` (delta = 1452) and `Y = 3100` (delta = 1052), only LEFT is triggered
 
 ## Directory Structure
 
@@ -163,7 +172,9 @@ ADC Value (0-4095)
 │   │   ├── selectedgamedesign_screen/  # Game size selection
 │   │   ├── gameoverscreen_screen/ # Game over screen
 │   │   ├── containers/            # UI components (Tile, Score, etc.)
-│   │   └── common/                # Shared code (GameGlobal, etc.)
+│   │   └── common/                # Shared code
+│   │       ├── Game2048Engine.hpp    # Template-based game engine (3x3, 4x4, 5x5)
+│   │       └── GameGlobal.hpp        # Global game state (scores, game mode)
 │   ├── target/              # HAL implementation for STM32
 │   └── generated/           # Auto-generated code from TouchGFX Designer
 ├── Drivers/                 # STM32 HAL drivers
@@ -303,19 +314,55 @@ function moveLeft():
 - **Game Over Check**: Game ends when no empty cells AND no adjacent tiles with same value
 - **Score Update**: Points are awarded when tiles merge (equal to the merged tile's new value)
 
+### Game Engine Implementation
+
+The game uses a **template-based engine** (`Game2048Engine<SIZE>`) to avoid code duplication:
+
+- **Generic Algorithm**: Same slide & merge logic works for 3x3, 4x4, and 5x5 grids
+- **Template Specialization**: `Game2048Engine<3>`, `Game2048Engine<4>`, `Game2048Engine<5>`
+- **Features**:
+  - Grid state management (save/restore)
+  - Move detection (`moved` flag)
+  - Score tracking
+  - Game over detection
+  - Spawn tile helper function
+
+**Usage Example**:
+```cpp
+Game2048Engine<4> engine;  // 4x4 grid
+engine.moveLeft();
+if (engine.moved) {
+    engine.spawnTile(myRand);
+}
+if (engine.isGameOver()) {
+    // Game over logic
+}
+```
+
+**Special Modes**: Super Merging and Letter Merging have unique merging rules, so they implement custom logic without using `Game2048Engine`.
+
 ## Main Code Structure
 
 ### MVP Components:
-- `Model.cpp`: Hardware abstraction (GPIO polling, ADC reading, buzzer control)
+- `Model.cpp`: Hardware abstraction (GPIO polling, ADC reading, buzzer control, joystick hysteresis with diagonal fix)
 - `ModelListener.hpp`: Interface for Presenter to receive events
 - `*Presenter.cpp`: Event handlers, forwards to View
-- `*View.cpp`: Game logic and UI rendering
+- `*View.cpp`: UI rendering and game state management
 
-### Game Logic:
-- `MainScreenView.cpp`: Main 4x4 game logic
-- `Screen3x3View.cpp`: 3x3 game logic
-- `Screen5x5View.cpp`: 5x5 game logic
-- `GameGlobal.cpp`: Global score management
+### Game Engine:
+- **`Game2048Engine.hpp`**: Template-based generic game engine for standard 2048 logic
+  - Template parameter: Grid size (3, 4, or 5)
+  - Implements slide & merge algorithm
+  - Used by: `MainScreenView` (4x4), `Screen3x3View`, `Screen5x5View`
+  - **NOT used by**: Super Merging and Letter Merging modes (they have special logic)
+
+### Game Logic Files:
+- `MainScreenView.cpp`: 4x4 game - uses `Game2048Engine<4>`
+- `Screen3x3View.cpp`: 3x3 game - uses `Game2048Engine<3>`
+- `Screen5x5View.cpp`: 5x5 game - uses `Game2048Engine<5>`
+- `Screen5x5_superMergingView.cpp`: Custom merging logic (no engine)
+- `Screen5x5_letterMergingView.cpp`: Custom letter merging logic (no engine)
+- `GameGlobal.cpp`: Global score management (best scores per game mode)
 
 ### UI Components:
 - `Tile.cpp`: Component to display a number tile
