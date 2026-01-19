@@ -4,6 +4,7 @@
 #include <gui_generated/mainscreen_screen/MainScreenViewBase.hpp>
 #include <gui/mainscreen_screen/MainScreenPresenter.hpp>
 #include <gui/containers/Tile.hpp>
+#include <gui/common/Game2048Engine.hpp>
 #include <stdint.h>
 
 /**
@@ -17,6 +18,8 @@
  *
  * Luồng Button: Model -> Presenter -> View (onMoveXxx methods)
  * Luồng Touch: View trực tiếp xử lý (handleDragEvent, handleGestureEvent)
+ * 
+ * REFACTORED: Sử dụng Game2048Engine<4> để xử lý game logic
  */
 class MainScreenView : public MainScreenViewBase
 {
@@ -38,67 +41,41 @@ public:
     // ==============================================================================
     // Public methods để Presenter gọi (MVP pattern)
     // ==============================================================================
-
-    /**
-     * @brief Xử lý khi Presenter báo nhấn nút UP
-     */
     void onMoveUp();
-
-    /**
-     * @brief Xử lý khi Presenter báo nhấn nút DOWN
-     */
     void onMoveDown();
-
-    /**
-     * @brief Xử lý khi Presenter báo nhấn nút LEFT
-     */
     void onMoveLeft();
-
-    /**
-     * @brief Xử lý khi Presenter báo nhấn nút RIGHT
-     */
     void onMoveRight();
-
-    /**
-     * @brief Xử lý khi Presenter báo nhấn nút BACK
-     */
     void onNavigateBack();
 
     // ==============================================================================
-    // Game Logic Methods (public để có thể test/access)
+    // Game Logic Methods
     // ==============================================================================
     void spawnRandomTile();
     void navigateToGameOverScreen();
     void gotoGameOverScreen();
     bool isGameOver();
-    void saveGridState();
-    bool hasGridChanged();
 
 protected:
     // ==============================================================================
-    // Game State
+    // Game Engine (handles all game logic)
     // ==============================================================================
-    Tile* tiles[4][4];                    // Mảng 2D con trỏ đến Tile widgets
-    uint16_t gridBeforeMove[4][4];        // Lưu trạng thái trước khi move (để check thay đổi)
-    uint32_t score;                       // Điểm hiện tại
-    uint32_t bestScore;                   // Điểm cao nhất
-
-    // ==============================================================================
-    // Internal Move Methods
-    // ==============================================================================
-    void moveLeft();
-    void moveRight();
-    void moveUp();
-    void moveDown();
+    Game2048Engine<4> engine;
     
+    // ==============================================================================
+    // UI Components
+    // ==============================================================================
+    Tile* tiles[4][4];  // UI tile widgets
+
     // ==============================================================================
     // Helper Methods
     // ==============================================================================
-    uint32_t myRand();                    // Custom random number generator
-    void updateScoreText();               // Cập nhật hiển thị điểm
+    uint32_t myRand();
+    void syncEngineToUI();    // Sync engine.grid -> tiles UI
+    void syncUIToEngine();    // Sync tiles UI -> engine.grid (if needed)
+    void updateScoreText();
 
     // ==============================================================================
-    // Drag/Gesture State (cho touch input)
+    // Drag/Gesture State
     // ==============================================================================
     int16_t dragStartX;
     int16_t dragStartY;
@@ -106,13 +83,9 @@ protected:
     int16_t dragEndY;
     bool isDragging;
     
-    // Ngưỡng tối thiểu để tính là 1 lần vuốt (pixel)
     static const int16_t MIN_SWIPE_DISTANCE = 30;
 
 private:
-    /**
-     * @brief Xử lý chung sau khi move (spawn tile, check game over)
-     */
     void processAfterMove();
 };
 

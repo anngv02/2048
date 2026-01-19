@@ -161,6 +161,12 @@ void Model::processDigitalButtons(uint8_t currentState, uint32_t currentTime)
  * Điều này tạo vùng "chết" giữa 1000-1500, nơi không có action nào xảy ra,
  * ngăn việc buzzer kêu liên tục khi giá trị dao động.
  * 
+ * DIAGONAL MOVEMENT FIX:
+ * ----------------------
+ * Khi gạt chéo, cả X và Y đều vượt threshold. Để tránh buzzer kêu 2 lần:
+ * - Chỉ trigger direction có độ lệch lớn nhất (dominant axis)
+ * - Tính |X - CENTER| và |Y - CENTER|, chọn hướng có giá trị lớn hơn
+ * 
  * FLOW:
  * 1. Joystick ở center (2048) -> không làm gì
  * 2. Gạt xuống, ADC < 1000 -> isJoyDownActive = true, trigger DOWN, buzzer beep
@@ -182,90 +188,132 @@ void Model::processJoystickWithHysteresis(uint32_t currentTime)
         return;
     }
 
-    // ==================== JOYSTICK Y AXIS (UP/DOWN) ====================
+    static const uint16_t CENTER_VALUE = 2048;  // Giá trị center của ADC
     
-    // -------------------- UP: Y > MAX_THRESHOLD --------------------
-    if (!isJoyUpActive)
+    // Tính độ lệch từ center cho cả 2 trục
+    int16_t deltaX = 0;
+    int16_t deltaY = 0;
+    
+    // Tính delta cho X (LEFT/RIGHT)
+    if (joystickX > MAX_THRESHOLD)
+        deltaX = joystickX - CENTER_VALUE;  // LEFT: giá trị dương lớn
+    else if (joystickX < MIN_THRESHOLD)
+        deltaX = CENTER_VALUE - joystickX;  // RIGHT: giá trị dương lớn
+    
+    // Tính delta cho Y (UP/DOWN)
+    if (joystickY > MAX_THRESHOLD)
+        deltaY = joystickY - CENTER_VALUE;  // UP: giá trị dương lớn
+    else if (joystickY < MIN_THRESHOLD)
+        deltaY = CENTER_VALUE - joystickY;  // DOWN: giá trị dương lớn
+    
+    // Xác định direction nào được trigger (nếu có)
+    enum {
+        DIR_NONE = 0,
+        DIR_UP,
+        DIR_DOWN,
+        DIR_LEFT,
+        DIR_RIGHT
+    };
+    uint8_t triggerDir = DIR_NONE;
+    
+    // Chỉ trigger nếu cả X và Y đều vượt threshold -> chọn direction có độ lệch lớn nhất
+    if (deltaX > 0 && deltaY > 0)
     {
-        // Chưa active -> kiểm tra trigger
-        if (joystickY > MAX_THRESHOLD)
+        // Gạt chéo: chọn direction có độ lệch lớn hơn
+        if (deltaX > deltaY)
         {
-            isJoyUpActive = true;  // Khóa trạng thái
+            // X axis dominant
+            if (joystickX > MAX_THRESHOLD && !isJoyLeftActive)
+                triggerDir = DIR_LEFT;
+            else if (joystickX < MIN_THRESHOLD && !isJoyRightActive)
+                triggerDir = DIR_RIGHT;
+        }
+        else
+        {
+            // Y axis dominant
+            if (joystickY > MAX_THRESHOLD && !isJoyUpActive)
+                triggerDir = DIR_UP;
+            else if (joystickY < MIN_THRESHOLD && !isJoyDownActive)
+                triggerDir = DIR_DOWN;
+        }
+    }
+    // Chỉ X axis vượt threshold
+    else if (deltaX > 0)
+    {
+        if (joystickX > MAX_THRESHOLD && !isJoyLeftActive)
+            triggerDir = DIR_LEFT;
+        else if (joystickX < MIN_THRESHOLD && !isJoyRightActive)
+            triggerDir = DIR_RIGHT;
+    }
+    // Chỉ Y axis vượt threshold
+    else if (deltaY > 0)
+    {
+        if (joystickY > MAX_THRESHOLD && !isJoyUpActive)
+            triggerDir = DIR_UP;
+        else if (joystickY < MIN_THRESHOLD && !isJoyDownActive)
+            triggerDir = DIR_DOWN;
+    }
+    
+    // Trigger direction đã chọn (chỉ một direction mỗi lần)
+    switch (triggerDir)
+    {
+        case DIR_UP:
+            isJoyUpActive = true;
             buzzerBeep(100);
             if (modelListener) modelListener->onButtonUp();
             lastPressTime = currentTime;
-        }
-    }
-    else
-    {
-        // Đang active -> kiểm tra reset
-        // Reset khi Y < MAX_THRESHOLD - RESET_OFFSET (2500)
-        if (joystickY < (MAX_THRESHOLD - RESET_OFFSET))
-        {
-            isJoyUpActive = false;  // Mở khóa, cho phép trigger lại
-        }
-    }
-
-    // -------------------- DOWN: Y < MIN_THRESHOLD --------------------
-    if (!isJoyDownActive)
-    {
-        if (joystickY < MIN_THRESHOLD)
-        {
+            break;
+            
+        case DIR_DOWN:
             isJoyDownActive = true;
             buzzerBeep(100);
             if (modelListener) modelListener->onButtonDown();
             lastPressTime = currentTime;
-        }
-    }
-    else
-    {
-        // Reset khi Y > MIN_THRESHOLD + RESET_OFFSET (1500)
-        if (joystickY > (MIN_THRESHOLD + RESET_OFFSET))
-        {
-            isJoyDownActive = false;
-        }
-    }
-
-    // ==================== JOYSTICK X AXIS (LEFT/RIGHT) ====================
-    
-    // -------------------- LEFT: X > MAX_THRESHOLD --------------------
-    if (!isJoyLeftActive)
-    {
-        if (joystickX > MAX_THRESHOLD)
-        {
+            break;
+            
+        case DIR_LEFT:
             isJoyLeftActive = true;
             buzzerBeep(100);
             if (modelListener) modelListener->onButtonLeft();
             lastPressTime = currentTime;
-        }
-    }
-    else
-    {
-        // Reset khi X < MAX_THRESHOLD - RESET_OFFSET (2500)
-        if (joystickX < (MAX_THRESHOLD - RESET_OFFSET))
-        {
-            isJoyLeftActive = false;
-        }
-    }
-
-    // -------------------- RIGHT: X < MIN_THRESHOLD --------------------
-    if (!isJoyRightActive)
-    {
-        if (joystickX < MIN_THRESHOLD)
-        {
+            break;
+            
+        case DIR_RIGHT:
             isJoyRightActive = true;
             buzzerBeep(100);
             if (modelListener) modelListener->onButtonRight();
             lastPressTime = currentTime;
-        }
+            break;
+            
+        case DIR_NONE:
+            // Không trigger, nhưng vẫn cần reset các flag nếu joystick đã về center
+            break;
     }
-    else
+    
+    // ==================== RESET LOGIC (chạy song song, không block trigger) ====================
+    
+    // Reset UP flag khi Y về vùng an toàn
+    if (isJoyUpActive && joystickY < (MAX_THRESHOLD - RESET_OFFSET))
     {
-        // Reset khi X > MIN_THRESHOLD + RESET_OFFSET (1500)
-        if (joystickX > (MIN_THRESHOLD + RESET_OFFSET))
-        {
-            isJoyRightActive = false;
-        }
+        isJoyUpActive = false;
+    }
+    
+    // Reset DOWN flag khi Y về vùng an toàn
+    if (isJoyDownActive && joystickY > (MIN_THRESHOLD + RESET_OFFSET))
+    {
+        isJoyDownActive = false;
+    }
+    
+    // Reset LEFT flag khi X về vùng an toàn
+    if (isJoyLeftActive && joystickX < (MAX_THRESHOLD - RESET_OFFSET))
+    {
+        isJoyLeftActive = false;
+    }
+    
+    // Reset RIGHT flag khi X về vùng an toàn
+    if (isJoyRightActive && joystickX > (MIN_THRESHOLD + RESET_OFFSET))
+    {
+        isJoyRightActive = false;
     }
 }
 

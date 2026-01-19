@@ -11,7 +11,6 @@
 
 // ==============================================================================
 // LƯU Ý: View KHÔNG truy cập GPIO trực tiếp - tuân thủ MVP pattern
-// GPIO polling được xử lý trong Model
 // ==============================================================================
 
 #define TILE_SIZE 80
@@ -24,8 +23,7 @@ uint32_t Screen3x3View::myRand()
 }
 
 Screen3x3View::Screen3x3View()
-    : score(0), bestScore(0),
-      dragStartX(0), dragStartY(0), dragEndX(0), dragEndY(0),
+    : dragStartX(0), dragStartY(0), dragEndX(0), dragEndY(0),
       isDragging(false)
 {
     tiles[0][0] = &tile3x31;
@@ -43,14 +41,14 @@ Screen3x3View::Screen3x3View()
 
 void Screen3x3View::setupScreen()
 {   
-    // Set game mode hiện tại (để GameOver hiển thị đúng bestScore)
+    // Set game mode hiện tại
     GameGlobal::currentGameMode = GAME_MODE_3X3;
 
-    score = 0;
-    bestScore = GameGlobal::bestScore3x3;
-    scoreContainer.setScore(score);
-    bestContainer.setScore(bestScore);
-    updateScoreText();
+    // Reset engine và set best score
+    engine.reset();
+    engine.setBestScore(GameGlobal::bestScore3x3);
+    
+    // Khởi tạo UI tiles
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 3; ++j)
@@ -62,8 +60,13 @@ void Screen3x3View::setupScreen()
         }
     }
 
-    tiles[0][0]->setValue(2);
-    tiles[0][1]->setValue(2);
+    // Spawn 2 tiles ban đầu
+    engine.setValue(0, 0, 2);
+    engine.setValue(0, 1, 2);
+    
+    syncEngineToUI();
+    updateScoreText();
+    
     Screen3x3ViewBase::setupScreen();
 }
 
@@ -71,6 +74,25 @@ void Screen3x3View::tearDownScreen()
 {
     Screen3x3ViewBase::tearDownScreen();
 }
+
+// ==============================================================================
+// ENGINE -> UI SYNC
+// ==============================================================================
+
+void Screen3x3View::syncEngineToUI()
+{
+    for (int r = 0; r < 3; r++)
+    {
+        for (int c = 0; c < 3; c++)
+        {
+            tiles[r][c]->setValue(engine.grid[r][c]);
+        }
+    }
+}
+
+// ==============================================================================
+// TOUCH/GESTURE HANDLERS
+// ==============================================================================
 
 void Screen3x3View::handleDragEvent(const DragEvent& evt)
 {
@@ -93,7 +115,7 @@ void Screen3x3View::handleGestureEvent(const GestureEvent& evt)
 {   
     if (!isDragging) return;
 
-    saveGridState();
+    engine.saveGridState();
     
     int16_t deltaX = dragEndX - dragStartX;
     int16_t deltaY = dragEndY - dragStartY;
@@ -108,181 +130,53 @@ void Screen3x3View::handleGestureEvent(const GestureEvent& evt)
 
     if (absX > absY) 
     {
-        if (deltaX > 0) moveRight();
-        else            moveLeft();
+        if (deltaX > 0) engine.moveRight();
+        else            engine.moveLeft();
     }
     else 
     {
-        if (deltaY > 0) moveDown();
-        else            moveUp();
+        if (deltaY > 0) engine.moveDown();
+        else            engine.moveUp();
     }
 
     isDragging = false;
     processAfterMove();
 }
 
-void Screen3x3View::updateScoreText()
-{   
-    GameGlobal::yourScore = score;
-    GameGlobal::bestScore3x3 = bestScore;
-    scoreContainer.setScore(score);
-    bestContainer.setScore(bestScore);
-}
-
-void Screen3x3View::moveLeft()
-{
-    for (int row = 0; row < 3; ++row)
-    {   
-        int merged[3] = {0};
-
-        for (int col = 1; col < 3; ++col)
-        {   
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentCol = col;
-            while (currentCol > 0 &&
-                   tiles[row][currentCol - 1]->getValue() == 0)
-            {   
-                tiles[row][currentCol - 1]->setValue(tiles[row][currentCol]->getValue());
-                tiles[row][currentCol]->setValue(0);
-                currentCol--;
-            }
-
-            if (currentCol > 0 &&
-                tiles[row][currentCol - 1]->getValue() == tiles[row][currentCol]->getValue() &&
-                !merged[currentCol - 1])
-            {   
-                uint16_t newValue = tiles[row][currentCol - 1]->getValue() * 2;
-                tiles[row][currentCol - 1]->setValue(newValue);
-                tiles[row][currentCol]->setValue(0);
-                merged[currentCol - 1] = 1;
-                score += newValue;
-                if (score > bestScore)
-                    bestScore = score;
-                updateScoreText();
-            }
-        }
-    }
-}
-
-void Screen3x3View::moveRight()
-{
-    for (int row = 0; row < 3; ++row)
-    {
-        int merged[3] = {0};
-
-        for (int col = 1; col >= 0; --col)
-        {
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentCol = col;
-            while (currentCol < 2 && tiles[row][currentCol + 1]->getValue() == 0)
-            {   
-                tiles[row][currentCol + 1]->setValue(tiles[row][currentCol]->getValue());
-                tiles[row][currentCol]->setValue(0);
-                currentCol++;
-            }
-
-            if (currentCol < 2 &&
-                tiles[row][currentCol + 1]->getValue() == tiles[row][currentCol]->getValue() &&
-                !merged[currentCol + 1])
-            {   
-                uint16_t newValue = tiles[row][currentCol + 1]->getValue() * 2;
-                tiles[row][currentCol + 1]->setValue(newValue);
-                tiles[row][currentCol]->setValue(0);
-                merged[currentCol + 1] = 1;
-                score += newValue;
-                if (score > bestScore)
-                    bestScore = score;
-                updateScoreText();
-            }
-        }
-    }
-}
-
-void Screen3x3View::moveUp()
-{
-    for (int col = 0; col < 3; ++col)
-    {
-        int merged[3] = {0};
-
-        for (int row = 1; row < 3; ++row)
-        {
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentRow = row;
-            while (currentRow > 0 && tiles[currentRow - 1][col]->getValue() == 0)
-            {   
-                tiles[currentRow - 1][col]->setValue(tiles[currentRow][col]->getValue());
-                tiles[currentRow][col]->setValue(0);
-                currentRow--;
-            }
-
-            if (currentRow > 0 &&
-                tiles[currentRow - 1][col]->getValue() == tiles[currentRow][col]->getValue() &&
-                !merged[currentRow - 1])
-            {   
-                uint16_t newValue = tiles[currentRow - 1][col]->getValue() * 2;
-                tiles[currentRow - 1][col]->setValue(newValue);
-                tiles[currentRow][col]->setValue(0);
-                merged[currentRow - 1] = 1;
-                score += newValue;
-                if (score > bestScore)
-                    bestScore = score;
-                updateScoreText();
-            }
-        }
-    }
-}
-
-void Screen3x3View::moveDown()
-{
-    for (int col = 0; col < 3; ++col)
-    {
-        int merged[3] = {0};
-
-        for (int row = 1; row >= 0; --row)
-        {
-            if (tiles[row][col]->getValue() == 0) continue;
-
-            int currentRow = row;
-            while (currentRow < 2 && tiles[currentRow + 1][col]->getValue() == 0)
-            {   
-                tiles[currentRow + 1][col]->setValue(tiles[currentRow][col]->getValue());
-                tiles[currentRow][col]->setValue(0);
-                currentRow++;
-            }
-
-            if (currentRow < 2 &&
-                tiles[currentRow + 1][col]->getValue() == tiles[currentRow][col]->getValue() &&
-                !merged[currentRow + 1])
-            {   
-                uint16_t newValue = tiles[currentRow + 1][col]->getValue() * 2;
-                tiles[currentRow + 1][col]->setValue(newValue);
-                tiles[currentRow][col]->setValue(0);
-                merged[currentRow + 1] = 1;
-                score += newValue;
-                if (score > bestScore)
-                    bestScore = score;
-                updateScoreText();
-            }
-        }
-    }
-}
-
 void Screen3x3View::handleKeyEvent(uint8_t key)
 {   
-    saveGridState();
+    engine.saveGridState();
     switch (key)
     {
-    case '4': moveLeft(); break;
-    case '6': moveRight(); break;
-    case '8': moveUp(); break;
-    case '2': moveDown(); break;
+    case '4': engine.moveLeft();  break;
+    case '6': engine.moveRight(); break;
+    case '8': engine.moveUp();    break;
+    case '2': engine.moveDown();  break;
     default: return;
     }
     processAfterMove();
 }
+
+void Screen3x3View::handleTickEvent()
+{
+    // GPIO polling được xử lý trong Model::tick()
+}
+
+// ==============================================================================
+// SCORE & UI UPDATE
+// ==============================================================================
+
+void Screen3x3View::updateScoreText()
+{   
+    GameGlobal::yourScore = engine.score;
+    GameGlobal::bestScore3x3 = engine.bestScore;
+    scoreContainer.setScore(engine.score);
+    bestContainer.setScore(engine.bestScore);
+}
+
+// ==============================================================================
+// GAME STATE METHODS
+// ==============================================================================
 
 void Screen3x3View::spawnRandomTile()
 {
@@ -292,8 +186,10 @@ void Screen3x3View::spawnRandomTile()
 
     for (int r = 0; r < 3; r++) {
         for (int c = 0; c < 3; c++) {
-            if (tiles[r][c]->getValue() == 0) {
-                empties[emptyCount++] = {r, c};
+            if (engine.grid[r][c] == 0) {
+                empties[emptyCount].row = r;
+                empties[emptyCount].col = c;
+                emptyCount++;
             }
         }
     }
@@ -304,11 +200,13 @@ void Screen3x3View::spawnRandomTile()
         int cc = empties[idx].col;
 
         uint16_t newValue = (myRand() % 10 == 0) ? 4 : 2;
-        tiles[rr][cc]->setValue(newValue);
+        engine.setValue(rr, cc, newValue);
+        
+        syncEngineToUI();
         tiles[rr][cc]->animateSpawn();
     }
     else {
-        if (isGameOver()) {
+        if (engine.isGameOver()) {
             navigateToGameOverScreen();
         }
     }
@@ -316,50 +214,13 @@ void Screen3x3View::spawnRandomTile()
 
 void Screen3x3View::navigateToGameOverScreen()
 {
-    presenter->notifyGameOver();  // Buzzer beep 1 giây
+    presenter->notifyGameOver();
     static_cast<FrontendApplication*>(Application::getInstance())->gotoGameOverScreenScreenSlideTransitionEast();
 }
 
 bool Screen3x3View::isGameOver()
 {
-    for (int r = 0; r < 3; ++r)
-    {
-        for (int c = 0; c < 3; ++c)
-        {
-            if (tiles[r][c]->getValue() == 0)
-                return false;
-        }
-    }
-
-    for (int r = 0; r < 3; ++r)
-    {
-        for (int c = 0; c < 3; ++c)
-        {
-            int current = tiles[r][c]->getValue();
-            if (c < 2 && tiles[r][c + 1]->getValue() == current)
-                return false;
-            if (r < 2 && tiles[r + 1][c]->getValue() == current)
-                return false;
-        }
-    }
-
-    return true;
-}
-
-void Screen3x3View::saveGridState()
-{
-    for (int i = 0; i < 3; ++i)
-        for (int j = 0; j < 3; ++j)
-            gridBeforeMove[i][j] = tiles[i][j]->getValue();
-}
-
-bool Screen3x3View::hasGridChanged()
-{
-    for (int i = 0; i < 3; ++i)
-        for (int j = 0; j < 3; ++j)
-            if (gridBeforeMove[i][j] != tiles[i][j]->getValue())
-                return true;
-    return false;
+    return engine.isGameOver();
 }
 
 // ==============================================================================
@@ -368,29 +229,29 @@ bool Screen3x3View::hasGridChanged()
 
 void Screen3x3View::onMoveUp()
 {
-    saveGridState();
-    moveUp();
+    engine.saveGridState();
+    engine.moveUp();
     processAfterMove();
 }
 
 void Screen3x3View::onMoveDown()
 {
-    saveGridState();
-    moveDown();
+    engine.saveGridState();
+    engine.moveDown();
     processAfterMove();
 }
 
 void Screen3x3View::onMoveLeft()
 {
-    saveGridState();
-    moveLeft();
+    engine.saveGridState();
+    engine.moveLeft();
     processAfterMove();
 }
 
 void Screen3x3View::onMoveRight()
 {
-    saveGridState();
-    moveRight();
+    engine.saveGridState();
+    engine.moveRight();
     processAfterMove();
 }
 
@@ -401,19 +262,13 @@ void Screen3x3View::onNavigateBack()
 
 void Screen3x3View::processAfterMove()
 {
-    if (hasGridChanged()) {
+    syncEngineToUI();
+    updateScoreText();
+    
+    if (engine.hasGridChanged()) {
         spawnRandomTile();
     }
-    if (isGameOver()) {
+    if (engine.isGameOver()) {
         navigateToGameOverScreen();
     }
-}
-
-/**
- * @brief handleTickEvent - GPIO polling đã được chuyển sang Model
- */
-void Screen3x3View::handleTickEvent()
-{
-    // GPIO polling được xử lý trong Model::tick()
-    // View nhận events thông qua Presenter (MVP pattern)
 }

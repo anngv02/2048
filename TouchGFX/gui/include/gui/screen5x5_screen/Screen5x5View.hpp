@@ -4,10 +4,13 @@
 #include <gui_generated/screen5x5_screen/Screen5x5ViewBase.hpp>
 #include <gui/screen5x5_screen/Screen5x5Presenter.hpp>
 #include <gui/containers/Tile5x5.hpp>
+#include <gui/common/Game2048Engine.hpp>
 
 /**
  * @class Screen5x5View
  * @brief View trong kiến trúc MVP cho Screen5x5 (Game 2048 5x5)
+ * 
+ * REFACTORED: Sử dụng Game2048Engine<5> để xử lý game logic
  */
 class Screen5x5View : public Screen5x5ViewBase
 {
@@ -34,21 +37,28 @@ public:
     void navigateToGameOverScreen();
     void gotoGameOverScreen();
     bool isGameOver();
-    void saveGridState();
-    bool hasGridChanged();
 
 protected:
+    // ==============================================================================
+    // Game Engine
+    // ==============================================================================
+    Game2048Engine<5> engine;
+    
+    // ==============================================================================
+    // UI Components
+    // ==============================================================================
     Tile5x5* tiles[5][5];
-    uint16_t gridBeforeMove[5][5];
-    void moveLeft();
-    void moveRight();
-    void moveUp();
-    void moveDown();
-    uint32_t score = 0;
-    uint32_t bestScore = 0;
+    
+    // ==============================================================================
+    // Helper Methods
+    // ==============================================================================
     uint32_t myRand();
+    void syncEngineToUI();
     void updateScoreText();
     
+    // ==============================================================================
+    // Drag/Gesture State
+    // ==============================================================================
     int16_t dragStartX;
     int16_t dragStartY;
     int16_t dragEndX;

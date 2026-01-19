@@ -4,10 +4,13 @@
 #include <gui_generated/screen3x3_screen/Screen3x3ViewBase.hpp>
 #include <gui/screen3x3_screen/Screen3x3Presenter.hpp>
 #include <gui/containers/Tile3x3.hpp>
+#include <gui/common/Game2048Engine.hpp>
 
 /**
  * @class Screen3x3View
  * @brief View trong kiến trúc MVP cho Screen3x3 (Game 2048 3x3)
+ * 
+ * REFACTORED: Sử dụng Game2048Engine<3> để xử lý game logic
  */
 class Screen3x3View : public Screen3x3ViewBase
 {
@@ -34,21 +37,28 @@ public:
     void navigateToGameOverScreen();
     void gotoGameOverScreen();
     bool isGameOver();
-    void saveGridState();
-    bool hasGridChanged();
 
-protected: 
+protected:
+    // ==============================================================================
+    // Game Engine
+    // ==============================================================================
+    Game2048Engine<3> engine;
+    
+    // ==============================================================================
+    // UI Components
+    // ==============================================================================
     Tile3x3* tiles[3][3];
-    uint16_t gridBeforeMove[3][3];
-    void moveLeft();
-    void moveRight();
-    void moveUp();
-    void moveDown();
-    uint32_t score = 0;
-    uint32_t bestScore = 0;
+    
+    // ==============================================================================
+    // Helper Methods
+    // ==============================================================================
     uint32_t myRand();
+    void syncEngineToUI();
     void updateScoreText();
     
+    // ==============================================================================
+    // Drag/Gesture State
+    // ==============================================================================
     int16_t dragStartX;
     int16_t dragStartY;
     int16_t dragEndX;
