@@ -1,7 +1,7 @@
 # 2048 Game on STM32F429I Discovery Board
 # Members
-Nguyễn Văn An - 20220013
-Nguyễn Thị Hà Chi - 20220016
+Nguyễn Văn An - 20220013 \\
+Nguyễn Thị Hà Chi - 20220016 \\
 Văn Đức Cường - 20220021
 
 # Work load
