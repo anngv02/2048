@@ -4,6 +4,12 @@ Nguyễn Văn An - 20220013
 Nguyễn Thị Hà Chi - 20220016
 Văn Đức Cường - 20220021
 
+# Work load
+https://docs.google.com/document/d/1Rc6pQJn3TCWb4GFSWM3aUvRS78knzdguSiGfVOBGpjc/edit?fbclid=IwY2xjawPnuwJleHRuA2FlbQIxMABicmlkETFMYVR5NmR6aktueFNGV0Ric3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHhhcZjPp-nLuMoFxU31TWNCd5CQ9FvP_dBFLSqlJ4AyC39aU1sZZfHlC4a0P_aem_7runHD7D9ny46pr5oSFC4g&tab=t.0
+
+# Video demo
+https://drive.google.com/drive/folders/1EXR6k5SGpmYPlA_WsYHsWP5qKt1F-NfO?usp=sharing
+
 ## Description
 
 This is a 2048 game developed for the STM32F429I Discovery board (REV D01). The game supports multiple game modes with a graphical interface built using the TouchGFX framework.
